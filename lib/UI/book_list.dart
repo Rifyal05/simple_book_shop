@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import '../Model/products.dart';
 import '../Providers/cart_providers.dart';
@@ -7,11 +8,12 @@ import '../Providers/cart_providers.dart';
 class BookList extends StatelessWidget {
   final List<Book> books;
 
-  const BookList({Key? key, required this.books}) : super(key: key);
+  const BookList({super.key, required this.books});
 
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context, listen: false);
+    final NumberFormat formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ');
 
     return ListView.builder(
       itemCount: books.length,
@@ -45,7 +47,7 @@ class BookList extends StatelessWidget {
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       Text(
-                        '\$${book.price.toStringAsFixed(2)}',
+                        formatter.format(book.price),
                         style: TextStyle(fontSize: 16, color: Colors.green[800]),
                       ),
                     ],
