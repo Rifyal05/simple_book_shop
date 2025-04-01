@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Model/products.dart';
 import '../Providers/cart_providers.dart';
-import 'book_list.dart';
+import '../UI/book_list.dart';
 
 class Dashboard extends StatefulWidget {
   final List<Book> _books = [

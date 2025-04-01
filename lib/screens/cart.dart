@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../Providers/cart_providers.dart';
-import 'cart_item.dart';
+import '../UI/cart_item.dart';
 
 class Cart extends StatelessWidget {
   const Cart({super.key});
@@ -13,7 +13,7 @@ class Cart extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Keranjang Belanja'),
+        title: const Text('Keranjang Belanja'),
       ),
       body: Column(
         children: <Widget>[

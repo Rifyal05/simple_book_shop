@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:simple_ecommerce/UI/cart.dart';
-import 'package:simple_ecommerce/UI/dashboard.dart';
-import 'package:simple_ecommerce/UI/profile.dart';
+import 'package:simple_ecommerce/screens/cart.dart';
+import 'package:simple_ecommerce/screens/dashboard.dart';
+import 'package:simple_ecommerce/screens/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
