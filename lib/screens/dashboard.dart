@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 import '../Model/products.dart';
 import '../Providers/cart_providers.dart';
 import '../UI/book_list.dart';
@@ -43,94 +45,201 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  // State class
   int _current = 0;
   String _selectedOption = 'Terbaru';
+  String _searchText = '';
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context, listen: false);
+    Provider.of<CartProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("DASHBOARD"),
-      ),
-      body: Column(
-        children: [
-          CarouselSlider(
-            items: widget._bannerImages.map((url) {
-              return Container(
-                margin:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  image: DecorationImage(
-                    image: NetworkImage(url),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              );
-            }).toList(),
-            options: CarouselOptions(
-              height: 180.0,
-              autoPlay: true,
-              enlargeCenterPage: true,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              },
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: widget._bannerImages.asMap().entries.map((entry) {
-              return Container(
-                width: 8.0,
-                height: 8.0,
-                margin:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _current == entry.key
-                      ? Colors.blue
-                      : Colors.grey,
-                ),
-              );
-            }).toList(),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14.0),
+        title: const Text("DASHBOARD",
+        style: TextStyle(
+          fontSize: 20,
+        ),),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "PRODUK",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Cari buku...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchText = value;
+                      });
+                    },
                   ),
                 ),
-                DropdownButton<String>(
-                  value: _selectedOption,
-                  items: <String>['Terbaru', 'Terlaris', 'Harga Terendah', 'Harga Tertinggi']
-                      .map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedOption = newValue!;
-                    });
+                IconButton(
+                  padding: const EdgeInsets.only(left: 10, bottom: 5, right: 5),
+                  icon: const Icon(Icons.settings, size: 34,),
+                  onPressed: () {
                   },
                 ),
               ],
             ),
           ),
-          Expanded(child: BookList(books: widget._books)),
-        ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 18, right: 12, left: 12),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        //
+                      },
+                      child: const Text('Anak-Anak'),
+                    ),
+                    const SizedBox(width: 8.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        //
+                      },
+                      child: const Text('Fiksi'),
+                    ),
+                    const SizedBox(width: 8.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        //
+                      },
+                      child: const Text('Non-Fiksi'),
+                    ),
+                    const SizedBox(width: 8.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        //
+                      },
+                      child: const Text('Misteri'),
+                    ),
+                    const SizedBox(width: 8.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        //
+                      },
+                      child: const Text('Fantasi'),
+                    ),
+                    //
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  CarouselSlider(
+                    items: widget._bannerImages.map((url) {
+                      return Container(
+                        margin:
+                        const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: url,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                          const Center(child: Icon(Icons.error)),
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      height: 180.0,
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _current = index;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  // Indicator Carousel
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: widget._bannerImages.asMap().entries.map((entry) {
+                      return Container(
+                        width: 8.0,
+                        height: 8.0,
+                        margin:
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _current == entry.key
+                              ? Colors.blue
+                              : Colors.grey,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "PRODUK",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        DropdownButton<String>(
+                          value: _selectedOption,
+                          items: <String>['Terbaru', 'Terlaris', 'Harga Terendah', 'Harga Tertinggi']
+                              .map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedOption = newValue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                      child: BookList(
+                          books: widget._books,
+                          searchText: _searchText)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

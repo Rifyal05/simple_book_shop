@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -7,30 +8,48 @@ import '../Providers/cart_providers.dart';
 
 class BookList extends StatelessWidget {
   final List<Book> books;
+  final String searchText;
 
-  const BookList({super.key, required this.books});
+  const BookList({super.key, required this.books, this.searchText = ''});
 
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context, listen: false);
-    final NumberFormat formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ');
+    final NumberFormat rupiahFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+
+    List<Book> filteredBooks = _filterBooks(books, searchText);
 
     return ListView.builder(
-      itemCount: books.length,
+      itemCount: filteredBooks.length,
       itemBuilder: (context, index) {
-        final book = books[index];
+        final book = filteredBooks[index];
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: <Widget>[
                 Container(
-                  width: 120,
-                  height: 150,
+                  width: 100,
+                  height: 125,
                   margin: const EdgeInsets.only(right: 16.0),
-                  child: Image.network(
-                    book.imageUrl,
-                    fit: BoxFit.contain,
+                  child: CachedNetworkImage(
+                    imageUrl: book.imageUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(0),
+                        image: DecorationImage(
+                          image: ResizeImage(imageProvider, width: 500, height: 709),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -47,8 +66,8 @@ class BookList extends StatelessWidget {
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       Text(
-                        formatter.format(book.price),
-                        style: TextStyle(fontSize: 16, color: Colors.green[800]),
+                        rupiahFormat.format(book.price),
+                        style: const TextStyle(fontSize: 16, color: Colors.green),
                       ),
                     ],
                   ),
@@ -68,5 +87,17 @@ class BookList extends StatelessWidget {
         );
       },
     );
+  }
+
+  List<Book> _filterBooks(List<Book> books, String searchText) {
+    if (searchText.isEmpty) {
+      return books;
+    } else {
+      return books
+          .where((book) =>
+      book.title.toLowerCase().contains(searchText.toLowerCase()) ||
+          book.author.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    }
   }
 }
