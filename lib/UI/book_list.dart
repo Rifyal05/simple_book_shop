@@ -9,8 +9,16 @@ import '../Providers/cart_providers.dart';
 class BookList extends StatelessWidget {
   final List<Book> books;
   final String searchText;
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
 
-  const BookList({super.key, required this.books, this.searchText = ''});
+  const BookList({
+    super.key,
+    required this.books,
+    this.searchText = '',
+    this.shrinkWrap = false,
+    this.physics,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +32,13 @@ class BookList extends StatelessWidget {
     List<Book> filteredBooks = _filterBooks(books, searchText);
 
     return ListView.builder(
+      shrinkWrap: shrinkWrap,
+      physics: physics,
       itemCount: filteredBooks.length,
       itemBuilder: (context, index) {
         final book = filteredBooks[index];
         return Card(
+          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 0),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -36,48 +47,57 @@ class BookList extends StatelessWidget {
                   width: 100,
                   height: 125,
                   margin: const EdgeInsets.only(right: 16.0),
-                  child: CachedNetworkImage(
-                    imageUrl: book.imageUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(0),
-                        image: DecorationImage(
-                          image: ResizeImage(imageProvider, width: 500, height: 709),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4.0),
+                    child: CachedNetworkImage(
+                      imageUrl: book.imageUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
                     ),
                   ),
                 ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         book.title,
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 4),
                       Text(
                         'oleh ${book.author}',
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 8),
                       Text(
                         rupiahFormat.format(book.price),
-                        style: const TextStyle(fontSize: 16, color: Colors.green),
+                        style: const TextStyle(fontSize: 16, color: Colors.green, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.add_shopping_cart),
+                  color: Theme.of(context).primaryColor,
                   onPressed: () {
                     cart.addItem(book);
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('${book.title} ditambahkan')),
+                      SnackBar(
+                        content: Text('${book.title} ditambahkan ke keranjang'),
+                        duration: const Duration(seconds: 2),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () {
+                          },
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -93,10 +113,11 @@ class BookList extends StatelessWidget {
     if (searchText.isEmpty) {
       return books;
     } else {
+      final searchLower = searchText.toLowerCase();
       return books
           .where((book) =>
-      book.title.toLowerCase().contains(searchText.toLowerCase()) ||
-          book.author.toLowerCase().contains(searchText.toLowerCase()))
+      book.title.toLowerCase().contains(searchLower) ||
+          book.author.toLowerCase().contains(searchLower))
           .toList();
     }
   }
