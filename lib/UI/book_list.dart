@@ -9,16 +9,8 @@ import '../Providers/cart_providers.dart';
 class BookList extends StatelessWidget {
   final List<Book> books;
   final String searchText;
-  final bool shrinkWrap;
-  final ScrollPhysics? physics;
 
-  const BookList({
-    super.key,
-    required this.books,
-    this.searchText = '',
-    this.shrinkWrap = false,
-    this.physics,
-  });
+  const BookList({super.key, required this.books, this.searchText = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -31,81 +23,108 @@ class BookList extends StatelessWidget {
 
     List<Book> filteredBooks = _filterBooks(books, searchText);
 
-    return ListView.builder(
-      shrinkWrap: shrinkWrap,
-      physics: physics,
-      itemCount: filteredBooks.length,
-      itemBuilder: (context, index) {
-        final book = filteredBooks[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 125,
-                  margin: const EdgeInsets.only(right: 16.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4.0),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Menuju halaman produk lengkap')),
+              );
+            },
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Lihat Lengkap',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Colors.blue,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          ...filteredBooks.map((book) => Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: 100,
+                    height: 125,
+                    margin: const EdgeInsets.only(right: 16.0),
                     child: CachedNetworkImage(
                       imageUrl: book.imageUrl,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        book.title,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'oleh ${book.author}',
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        rupiahFormat.format(book.price),
-                        style: const TextStyle(fontSize: 16, color: Colors.green, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add_shopping_cart),
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    cart.addItem(book);
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${book.title} ditambahkan ke keranjang'),
-                        duration: const Duration(seconds: 2),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          onPressed: () {
-                          },
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(0.0),
+                          image: DecorationImage(
+                            image: ResizeImage(imageProvider, width: 500, height: 709),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          book.title,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'oleh ${book.author}',
+                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        ),
+                        Text(
+                          rupiahFormat.format(book.price),
+                          style: const TextStyle(fontSize: 16, color: Colors.green),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_shopping_cart),
+                    onPressed: () {
+                      Book addedBook = book;
+                      cart.addItem(addedBook);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${addedBook.title} ditambahkan'),
+                          action: SnackBarAction(
+                            label: 'Undo',
+                            onPressed: () {
+                              cart.removeItem(addedBook);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('${addedBook.title} dihapus dari keranjang')),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          )),
+        ],
+      ),
     );
   }
 
@@ -113,11 +132,10 @@ class BookList extends StatelessWidget {
     if (searchText.isEmpty) {
       return books;
     } else {
-      final searchLower = searchText.toLowerCase();
       return books
           .where((book) =>
-      book.title.toLowerCase().contains(searchLower) ||
-          book.author.toLowerCase().contains(searchLower))
+      book.title.toLowerCase().contains(searchText.toLowerCase()) ||
+          book.author.toLowerCase().contains(searchText.toLowerCase()))
           .toList();
     }
   }

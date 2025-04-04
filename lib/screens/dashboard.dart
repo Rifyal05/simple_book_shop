@@ -15,7 +15,7 @@ class Dashboard extends StatefulWidget {
       author: 'Penulis Buku 1',
       price: 25000,
       imageUrl:
-          'https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//catalog-image/97/MTA-146437441/reneluv_selalu_ada_ruang_untuk_pulang_buku_novel_by-_karima_ifha_-_penerbit_reneluv_full01_vkmkazji.jpg',
+      'https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//catalog-image/97/MTA-146437441/reneluv_selalu_ada_ruang_untuk_pulang_buku_novel_by-_karima_ifha_-_penerbit_reneluv_full01_vkmkazji.jpg',
     ),
     Book(
       id: '2',
@@ -30,7 +30,7 @@ class Dashboard extends StatefulWidget {
       author: 'Penulis Buku 3',
       price: 20000,
       imageUrl:
-          'https://deepublishstore.com/wp-content/uploads/2018/01/Wujud-Tanpa-Suara-Nurul-depan1.jpg',
+      'https://deepublishstore.com/wp-content/uploads/2018/01/Wujud-Tanpa-Suara-Nurul-depan1.jpg',
     ),
     Book(
         id: '4',
@@ -62,6 +62,26 @@ class Dashboard extends StatefulWidget {
         author: 'Penulis 8',
         price: 80000,
         imageUrl: 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg?ts=1734004864'),
+    Book(
+        id: '8',
+        title: 'Buku 8',
+        author: 'Penulis 8',
+        price: 80000,
+        imageUrl: 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg?ts=1734004864'),
+
+    Book(
+        id: '8',
+        title: 'Buku 8',
+        author: 'Penulis 8',
+        price: 80000,
+        imageUrl: 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg?ts=1734004864'),
+    Book(
+        id: '8',
+        title: 'Buku 8',
+        author: 'Penulis 8',
+        price: 80000,
+        imageUrl: 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg?ts=1734004864'),
+
   ];
   final List<String> _bannerImages = [
     'https://img.freepik.com/premium-vector/playful-cartoon-book-illustration-with-vector-characters_1323048-20751.jpg',
@@ -107,6 +127,7 @@ class _DashboardState extends State<Dashboard> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+              surfaceTintColor: Colors.black,
               title: const Text(
                 "DASHBOARD",
                 style: TextStyle(fontSize: 20),
@@ -133,9 +154,9 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             filled: true,
                             fillColor:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.grey[800]
-                                    : Colors.grey[200],
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[800]
+                                : Colors.grey[200],
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 16),
                           ),
@@ -178,23 +199,23 @@ class _DashboardState extends State<Dashboard> {
                     child: Row(
                       children: _categories
                           .map((category) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 8),
-                                      textStyle: const TextStyle(fontSize: 14)),
-                                  onPressed: () {
-                                    print('Category selected: $category');
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text('Kategori: $category')),
-                                    );
-                                  },
-                                  child: Text(category),
-                                ),
-                              ))
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              textStyle: const TextStyle(fontSize: 14)),
+                          onPressed: () {
+                            print('Category selected: $category');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Kategori: $category')),
+                            );
+                          },
+                          child: Text(category),
+                        ),
+                      ))
                           .toList(),
                     ),
                   ),
@@ -220,7 +241,7 @@ class _DashboardState extends State<Dashboard> {
                             placeholder: (context, url) => const Center(
                                 child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) =>
-                                const Center(child: Icon(Icons.error)),
+                            const Center(child: Icon(Icons.error)),
                           ),
                         );
                       }).toList(),
@@ -241,7 +262,7 @@ class _DashboardState extends State<Dashboard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children:
-                          widget._bannerImages.asMap().entries.map((entry) {
+                      widget._bannerImages.asMap().entries.map((entry) {
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           width: _current == entry.key ? 12.0 : 8.0,
@@ -251,8 +272,8 @@ class _DashboardState extends State<Dashboard> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.0),
                             color: (_current == entry.key
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Colors.grey)
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey)
                                 .withOpacity(_current == entry.key ? 0.9 : 0.4),
                           ),
                         );
@@ -297,7 +318,6 @@ class _DashboardState extends State<Dashboard> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 8.0),
                   ],
                 ),
               ),
@@ -307,7 +327,7 @@ class _DashboardState extends State<Dashboard> {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: BookList(
-            books: widget._books,
+            books: widget._books.sublist(0, 3),
             searchText: _searchText,
           ),
         ),
