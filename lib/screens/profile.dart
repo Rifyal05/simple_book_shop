@@ -32,7 +32,8 @@ class Profile extends StatelessWidget {
     );
   }
 
-  Future<void> _showChangeUsernameDialog(BuildContext context, UserProvider user) async {
+  Future<void> _showChangeUsernameDialog(
+      BuildContext context, UserProvider user) async {
     TextEditingController _controller = TextEditingController();
     return showDialog(
       context: context,

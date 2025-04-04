@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:simple_ecommerce/screens/cart.dart';
 import 'package:simple_ecommerce/screens/dashboard.dart';
@@ -14,7 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [Dashboard(), const Cart(), const Profile() ];
+  final List<Widget> _pages = [Dashboard(), const Cart(), const Profile()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,15 +27,12 @@ class _HomePageState extends State<HomePage> {
           });
         },
         items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: "Dashboard"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Dashboard"),
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart), label: "Keranjang"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: "Profil"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
         ],
       ),
     );
   }
 }
-
