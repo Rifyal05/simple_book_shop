@@ -108,7 +108,7 @@ class PopularBookList extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              print('Lihat Detail ${book.title}');
+                              // print('Lihat Detail ${book.title}');
                             },
                             child: const Text(
                               'Lihat Detail',

@@ -11,7 +11,7 @@ import '../DataTest/bannerimagedata.dart';
 import '../DataTest/bookdata.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  const Dashboard({super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -129,7 +129,7 @@ class _DashboardState extends State<Dashboard> {
                                   horizontal: 12, vertical: 8),
                               textStyle: const TextStyle(fontSize: 14)),
                           onPressed: () {
-                            print('Category selected: $category');
+                            // print('Category selected: $category');
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                   content: Text('Kategori: $category')),
@@ -158,7 +158,7 @@ class _DashboardState extends State<Dashboard> {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(5.0),
                           child: AspectRatio(
-                            aspectRatio: 20 / 8,
+                            aspectRatio: 5 / 2,
                             child: FittedBox(
                               fit: BoxFit.cover,
                               child: CachedNetworkImage(

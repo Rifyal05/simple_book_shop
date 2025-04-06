@@ -7,7 +7,7 @@ import '../Providers/cart_providers.dart';
 class CartItem extends StatelessWidget {
   final Book book;
 
-  CartItem({required this.book});
+  const CartItem({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class CartItem extends StatelessWidget {
         title: Text(book.title),
         subtitle: Text('\$${book.price.toStringAsFixed(2)}'),
         trailing: IconButton(
-          icon: Icon(Icons.remove_shopping_cart),
+          icon: const Icon(Icons.remove_shopping_cart),
           onPressed: () {
             cart.removeItem(book);
           },

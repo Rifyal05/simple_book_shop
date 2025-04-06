@@ -22,7 +22,7 @@ class ArticleList extends StatelessWidget {
             imageUrl: article.imageUrl,
             date: article.date,
             onTap: () {
-              print('Artikel ${article.title} diklik');
+              // print('Artikel ${article.title} diklik');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Menuju halaman ${article.title}')),
               );
