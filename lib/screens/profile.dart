@@ -34,14 +34,14 @@ class Profile extends StatelessWidget {
 
   Future<void> _showChangeUsernameDialog(
       BuildContext context, UserProvider user) async {
-    TextEditingController _controller = TextEditingController();
+    TextEditingController controller = TextEditingController();
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Ubah Nama Pengguna'),
           content: TextField(
-            controller: _controller,
+            controller: controller,
             decoration: const InputDecoration(hintText: 'Masukkan nama baru'),
           ),
           actions: [
@@ -51,7 +51,7 @@ class Profile extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                user.changeUsername(_controller.text);
+                user.changeUsername(controller.text);
                 Navigator.pop(context);
               },
               child: const Text('Simpan'),
