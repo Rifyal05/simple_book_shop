@@ -28,7 +28,8 @@ class BookList extends StatelessWidget {
           GestureDetector(
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Fitur "Lihat Lengkap" belum ada')),
+                const SnackBar(
+                    content: Text('Fitur "Lihat Lengkap" belum ada')),
               );
             },
             child: const Padding(
@@ -53,93 +54,99 @@ class BookList extends StatelessWidget {
             ),
           ),
           ...filteredBooks.map((book) => Card(
-            margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    width: 80,
-                    height: 110,
-                    margin: const EdgeInsets.only(right: 12.0),
-                    child: CachedNetworkImage(
-                      imageUrl: book.imageUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
-                      errorWidget: (context, url, error) =>
-                      const Center(child: Icon(Icons.book, color: Colors.grey)),
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: 80,
+                        height: 110,
+                        margin: const EdgeInsets.only(right: 12.0),
+                        child: CachedNetworkImage(
+                          imageUrl: book.imageUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                              child:
+                                  CircularProgressIndicator(strokeWidth: 2.0)),
+                          errorWidget: (context, url, error) => const Center(
+                              child: Icon(Icons.book, color: Colors.grey)),
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          book.title,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              book.title,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'oleh ${book.author}',
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.grey[700]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              rupiahFormat.format(book.price),
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'oleh ${book.author}',
-                          style: TextStyle(
-                              fontSize: 13, color: Colors.grey[700]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          rupiahFormat.format(book.price),
-                          style: const TextStyle(
-                              fontSize: 15, color: Colors.green, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add_shopping_cart_outlined),
-                    tooltip: 'Tambah ke keranjang',
-                    // color: Theme.of(context).primaryColor,
-                    color: Colors.white,
-                    onPressed: () {
-                      cart.addItem(book);
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('"${book.title}" ditambahkan'),
-                          duration: const Duration(seconds: 3),
-                          action: SnackBarAction(
-                            label: 'Undo',
-                            onPressed: () {
-                              cart.decreaseQuantity(book.id);
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add_shopping_cart_outlined),
+                        tooltip: 'Tambah ke keranjang',
+                        // color: Theme.of(context).primaryColor,
+                        color: Colors.white,
+                        onPressed: () {
+                          cart.addItem(book);
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('"${book.title}" ditambahkan'),
+                              duration: const Duration(seconds: 3),
+                              action: SnackBarAction(
+                                label: 'Undo',
+                                onPressed: () {
+                                  cart.decreaseQuantity(book.id);
 
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Penambahan "${book.title}" dibatalkan')),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Penambahan "${book.title}" dibatalkan')),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          )),
+                ),
+              )),
         ],
       ),
     );
@@ -152,8 +159,8 @@ class BookList extends StatelessWidget {
       String lowerSearchText = searchText.toLowerCase();
       return books
           .where((book) =>
-      book.title.toLowerCase().contains(lowerSearchText) ||
-          book.author.toLowerCase().contains(lowerSearchText))
+              book.title.toLowerCase().contains(lowerSearchText) ||
+              book.author.toLowerCase().contains(lowerSearchText))
           .toList();
     }
   }
