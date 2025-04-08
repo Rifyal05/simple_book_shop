@@ -7,16 +7,12 @@ import '../Model/cart_item_model.dart';
 import '../Model/products.dart';
 import '../DataTest/bookdata.dart';
 
-// --- Perubahan: Ganti nama class ---
 class Cart extends StatefulWidget {
   const Cart({super.key});
 
   @override
-  // --- Perubahan: Ganti nama state class ---
   State<Cart> createState() => _CartState();
 }
-
-// --- Perubahan: Ganti nama state class dan State generic type ---
 class _CartState extends State<Cart> {
   late Future<List<Book>> _recommendedBooksFuture;
 
@@ -45,7 +41,6 @@ class _CartState extends State<Cart> {
 
     return Scaffold(
       appBar: AppBar(
-        // Ganti judul AppBar sesuai nama class baru (opsional)
         title: const Text('Keranjang'),
       ),
       body: Column(
@@ -179,11 +174,9 @@ class CartListItem extends StatelessWidget {
                     InkWell(onTap: () { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Detail untuk: ${cartItem.book.title}'))); }, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0), child: Text("Detail", style: textTheme.bodyMedium?.copyWith(color: Colors.blue, fontWeight: FontWeight.w500)))),
                     InkWell(
                         onTap: () {
-                          // --- Perubahan: Kembali ke showDialog ---
                           showDialog(
                             context: context,
                             builder: (ctx) => AlertDialog(
-                              // --- Perubahan: Shape kotak tetap di sini ---
                               shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                               title: const Text('Hapus Item'),
                               content: Text('Yakin ingin menghapus ${cartItem.book.title} dari keranjang?'),
@@ -223,9 +216,7 @@ class CartListItem extends StatelessWidget {
   }
 }
 
-// BookRecommendationCard tidak berubah
 class BookRecommendationCard extends StatelessWidget {
-  // ... (kode BookRecommendationCard sama seperti sebelumnya)
   final Book book;
   const BookRecommendationCard({required this.book, super.key});
 
