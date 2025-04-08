@@ -13,6 +13,7 @@ class Cart extends StatefulWidget {
   @override
   State<Cart> createState() => _CartState();
 }
+
 class _CartState extends State<Cart> {
   late Future<List<Book>> _recommendedBooksFuture;
 
@@ -32,6 +33,37 @@ class _CartState extends State<Cart> {
     }
   }
 
+  void _showClearCartConfirmationDialog(BuildContext context, CartProvider cart) {
+    final colorScheme = Theme.of(context).colorScheme;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        title: const Text('Kosongkan Keranjang'),
+        content: const Text('Yakin ingin menghapus semua item dari keranjang?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Batal'),
+            onPressed: () {
+              Navigator.of(ctx).pop(false);
+            },
+          ),
+          TextButton(
+            child: Text('Hapus Semua', style: TextStyle(color: colorScheme.error)),
+            onPressed: () {
+              Navigator.of(ctx).pop(true);
+            },
+          ),
+        ],
+      ),
+    ).then((confirmed) {
+      if (confirmed == true) {
+        cart.clearCart();
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
@@ -42,6 +74,17 @@ class _CartState extends State<Cart> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Keranjang'),
+        actions: [
+          if (cartItems.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.delete_sweep_outlined),
+              tooltip: 'Kosongkan Keranjang',
+              onPressed: () {
+                _showClearCartConfirmationDialog(context, cart);
+              },
+            ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [
@@ -100,7 +143,7 @@ class _CartState extends State<Cart> {
             ),
           ),
 
-          Card( // Checkout Area
+          Card(
             margin: const EdgeInsets.all(8.0),
             elevation: 4.0,
             child: Padding(
@@ -135,23 +178,18 @@ class CartListItem extends StatelessWidget {
     const double imageSize = 85.0;
 
     return InkWell(
-      onTap: () {
-        // Aksi tap item
-      },
+      onTap: () {},
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container( // Gambar
-              width: imageSize,
-              height: imageSize,
-              color: colorScheme.surfaceVariant.withOpacity(0.5),
-              margin: const EdgeInsets.only(right: 16.0),
+            Container(
+              width: imageSize, height: imageSize, color: colorScheme.surfaceVariant.withOpacity(0.5), margin: const EdgeInsets.only(right: 16.0),
               child: Image.network(cartItem.book.imageUrl, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, color: Colors.grey[600], size: 40), loadingBuilder: (context, child, loadingProgress) => loadingProgress == null ? child : Center(child: CircularProgressIndicator(strokeWidth: 2.0, value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,))),
             ),
 
-            Expanded( // Info Produk
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -163,12 +201,10 @@ class CartListItem extends StatelessWidget {
             ),
             const SizedBox(width: 8),
 
-            Column( // Tombol Aksi
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.end, mainAxisSize: MainAxisSize.min,
               children: [
-                Row( // Detail & Hapus
+                Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     InkWell(onTap: () { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Detail untuk: ${cartItem.book.title}'))); }, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0), child: Text("Detail", style: textTheme.bodyMedium?.copyWith(color: Colors.blue, fontWeight: FontWeight.w500)))),
@@ -185,21 +221,14 @@ class CartListItem extends StatelessWidget {
                                 TextButton(child: Text('Hapus', style: TextStyle(color: colorScheme.error)), onPressed: () { Navigator.of(ctx).pop(true); }),
                               ],
                             ),
-                          ).then((confirmed) {
-                            if (confirmed == true) {
-                              cart.removeItemById(cartItem.book.id);
-                            }
-                          });
+                          ).then((confirmed) { if (confirmed == true) { cart.removeItemById(cartItem.book.id); }});
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: Icon(Icons.delete_outline, color: colorScheme.error, size: 28),
-                        )
+                        child: Padding(padding: const EdgeInsets.only(left: 4.0), child: Icon(Icons.delete_outline, color: colorScheme.error, size: 28))
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
-                Row( // Kuantitas
+                Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     InkWell(onTap: () => cart.decreaseQuantity(cartItem.book.id), child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0), child: Icon(Icons.remove_circle_outline, size: 24, color: colorScheme.onSurface.withOpacity(0.6)))),
