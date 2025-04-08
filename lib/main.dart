@@ -9,7 +9,7 @@ import 'Providers/user_providers.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? true; // Change to False if Line 40 uncommented
+  bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? true; // Change to False if Line 40  is uncommented
 
   runApp(
     MultiProvider(

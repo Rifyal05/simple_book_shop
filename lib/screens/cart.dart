@@ -185,7 +185,7 @@ class CartListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: imageSize, height: imageSize, color: colorScheme.surfaceVariant.withOpacity(0.5), margin: const EdgeInsets.only(right: 16.0),
+              width: imageSize, height: imageSize, color: colorScheme.surfaceContainerHighest.withOpacity(0.5), margin: const EdgeInsets.only(right: 16.0),
               child: Image.network(cartItem.book.imageUrl, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, color: Colors.grey[600], size: 40), loadingBuilder: (context, child, loadingProgress) => loadingProgress == null ? child : Center(child: CircularProgressIndicator(strokeWidth: 2.0, value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,))),
             ),
 
@@ -269,7 +269,7 @@ class BookRecommendationCard extends StatelessWidget {
                 book.imageUrl,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Center(child: Icon(Icons.broken_image, size: 30, color: Colors.grey)),
+                errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image, size: 30, color: Colors.grey)),
                 loadingBuilder: (context, child, loadingProgress) => loadingProgress == null ? child : Center(child: CircularProgressIndicator(strokeWidth: 2.0, value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,)),
               ),
             ),
