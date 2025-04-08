@@ -9,7 +9,7 @@ import 'Providers/user_providers.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+  bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? true; // Change to False if Line 40 uncommented
 
   runApp(
     MultiProvider(
@@ -34,11 +34,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(
         useMaterial3: true,
       ),
-
+      // WARNING!! PLEASE READ CAREFULLY!! DO ONE BY ONE, STEP BY STEP.
       // If you want to see the onboarding page only once,
       // Uncomment line 40 and then comment out line 41
       // home: hasSeenOnboarding ? const HomePage() : const OnboardingPage(), // Uncomment this line to see the onboarding page once
       home: hasSeenOnboarding ? const OnboardingPage() : const HomePage(),    // Comment out this line after uncommenting the line above
+      // Then, change the value in line 12 to false!!
+      // if line 41 uncomment(do it if u want to modify the onboarding page)
+      // then the value in line 12 should be true!!
+      // U need to understand this!!
+      // SORRY FOR MY BROKEN ENGLISH!! \(>_<)/
     );
   }
 }

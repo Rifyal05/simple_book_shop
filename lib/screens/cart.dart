@@ -1,144 +1,277 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-
 import '../Providers/cart_providers.dart';
-import '../UI/cart_item.dart';
+import '../Model/cart_item_model.dart';
+import '../Model/products.dart';
+import '../DataTest/bookdata.dart';
 
-class Cart extends StatelessWidget {
+// --- Perubahan: Ganti nama class ---
+class Cart extends StatefulWidget {
   const Cart({super.key});
+
+  @override
+  // --- Perubahan: Ganti nama state class ---
+  State<Cart> createState() => _CartState();
+}
+
+// --- Perubahan: Ganti nama state class dan State generic type ---
+class _CartState extends State<Cart> {
+  late Future<List<Book>> _recommendedBooksFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _recommendedBooksFuture = _fetchRecommendedBooks();
+  }
+
+  Future<List<Book>> _fetchRecommendedBooks() async {
+    await Future.delayed(const Duration(milliseconds: 900));
+    try {
+      final recommendations = bookList.take(6).toList();
+      return recommendations;
+    } catch (error) {
+      throw Exception("Gagal memuat rekomendasi");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
     final cartItems = cart.items;
-
-    final NumberFormat rupiahFormat = NumberFormat.currency(
-      locale: 'id_ID',
-      symbol: 'Rp ',
-      decimalDigits: 0,
-    );
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Keranjang Belanja'),
-        actions: [
-          if (cartItems.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.delete_sweep_outlined),
-              tooltip: 'Kosongkan Keranjang',
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Konfirmasi'),
-                    content:
-                    const Text('Anda yakin ingin mengosongkan keranjang?'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Batal'),
-                        onPressed: () {
-                          Navigator.of(ctx).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Ya, Kosongkan', style: TextStyle(color: Colors.red)),
-                        onPressed: () {
-                          Navigator.of(ctx).pop();
-                          cart.clearCart();
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Keranjang telah dikosongkan')),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-        ],
+        // Ganti judul AppBar sesuai nama class baru (opsional)
+        title: const Text('Keranjang'),
       ),
-      body: cartItems.isEmpty
-          ? const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.shopping_cart_outlined,
-                size: 80, color: Colors.grey),
-            SizedBox(height: 16),
-            Text(
-              'Keranjang belanja Anda kosong',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Tambahkan beberapa buku!',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      )
-          : Column(
-        children: <Widget>[
+      body: Column(
+        children: [
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              itemCount: cartItems.length,
-              itemBuilder: (context, index) {
-                final cartItemModel = cartItems[index];
-                return CartItemWidget(cartItemModel: cartItemModel);
-              },
-            ),
-          ),
-          Card(
-            margin: const EdgeInsets.all(8.0),
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Total (${cart.totalQuantity} item):',
-                        style: TextStyle(
-                            fontSize: 16, color: Colors.grey[700]),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        rupiahFormat.format(cart.totalPrice),
-                        style: const TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  if (cartItems.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 40.0),
+                      child: Center(child: Text('Keranjang belanja masih kosong.')),
+                    )
+                  else
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: cartItems.length,
+                      itemBuilder: (ctx, i) => CartListItem(cartItem: cartItems[i]),
+                      separatorBuilder: (ctx, i) => const Divider(height: 1.0, thickness: 1.0, indent: 16.0, endIndent: 16.0),
+                    ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32.0, bottom: 8.0, left: 16.0, right: 16.0),
+                    child: Text('Rekomendasi Untukmu', style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                   ),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.payment),
-                    label: const Text('Checkout'),
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
-                        textStyle: const TextStyle(fontSize: 16)),
-                    onPressed: cartItems.isEmpty ? null : () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(
-                                'Proses checkout belum diimplementasikan')),
-                      );
-                    },
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: FutureBuilder<List<Book>>(
+                      future: _recommendedBooksFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator()));
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Oops! Gagal memuat rekomendasi.\nError: ${snapshot.error}'));
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(child: Text('Tidak ada rekomendasi saat ini.'));
+                        } else {
+                          final recommendations = snapshot.data!;
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 2 / 3.5, crossAxisSpacing: 8, mainAxisSpacing: 8),
+                            itemCount: recommendations.length,
+                            itemBuilder: (ctx, index) => BookRecommendationCard(book: recommendations[index]),
+                          );
+                        }
+                      },
+                    ),
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
           ),
+
+          Card( // Checkout Area
+            margin: const EdgeInsets.all(8.0),
+            elevation: 4.0,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Total:', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 10),
+                  Chip(label: Text('Rp ${cart.totalPrice.toStringAsFixed(0)}', style: TextStyle(color: colorScheme.onPrimary, fontWeight: FontWeight.bold)), backgroundColor: colorScheme.primary, padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+                  const Spacer(),
+                  ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: colorScheme.primary, foregroundColor: colorScheme.onPrimary), onPressed: cartItems.isEmpty ? null : () {}, child: const Text('CHECKOUT'))
+                ],
+              ),
+            ),
+          )
         ],
+      ),
+    );
+  }
+}
+
+class CartListItem extends StatelessWidget {
+  final CartItemModel cartItem;
+  const CartListItem({required this.cartItem, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final cart = Provider.of<CartProvider>(context, listen: false);
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    const double imageSize = 85.0;
+
+    return InkWell(
+      onTap: () {
+        // Aksi tap item
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container( // Gambar
+              width: imageSize,
+              height: imageSize,
+              color: colorScheme.surfaceVariant.withOpacity(0.5),
+              margin: const EdgeInsets.only(right: 16.0),
+              child: Image.network(cartItem.book.imageUrl, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, color: Colors.grey[600], size: 40), loadingBuilder: (context, child, loadingProgress) => loadingProgress == null ? child : Center(child: CircularProgressIndicator(strokeWidth: 2.0, value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,))),
+            ),
+
+            Expanded( // Info Produk
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(cartItem.book.title, style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold), maxLines: 3, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 8),
+                  Text('Rp ${cartItem.book.price.toStringAsFixed(0)} / item', style: textTheme.bodyMedium?.copyWith(color: colorScheme.secondary)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+
+            Column( // Tombol Aksi
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row( // Detail & Hapus
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(onTap: () { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Detail untuk: ${cartItem.book.title}'))); }, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0), child: Text("Detail", style: textTheme.bodyMedium?.copyWith(color: Colors.blue, fontWeight: FontWeight.w500)))),
+                    InkWell(
+                        onTap: () {
+                          // --- Perubahan: Kembali ke showDialog ---
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              // --- Perubahan: Shape kotak tetap di sini ---
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                              title: const Text('Hapus Item'),
+                              content: Text('Yakin ingin menghapus ${cartItem.book.title} dari keranjang?'),
+                              actions: <Widget>[
+                                TextButton(child: const Text('Batal'), onPressed: () { Navigator.of(ctx).pop(false); }),
+                                TextButton(child: Text('Hapus', style: TextStyle(color: colorScheme.error)), onPressed: () { Navigator.of(ctx).pop(true); }),
+                              ],
+                            ),
+                          ).then((confirmed) {
+                            if (confirmed == true) {
+                              cart.removeItemById(cartItem.book.id);
+                            }
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Icon(Icons.delete_outline, color: colorScheme.error, size: 28),
+                        )
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row( // Kuantitas
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(onTap: () => cart.decreaseQuantity(cartItem.book.id), child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0), child: Icon(Icons.remove_circle_outline, size: 24, color: colorScheme.onSurface.withOpacity(0.6)))),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 12.0), child: Text(cartItem.quantity.toString(), style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold))),
+                    InkWell(onTap: () => cart.addItem(cartItem.book), child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0), child: Icon(Icons.add_circle_outline, size: 24, color: colorScheme.primary))),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// BookRecommendationCard tidak berubah
+class BookRecommendationCard extends StatelessWidget {
+  // ... (kode BookRecommendationCard sama seperti sebelumnya)
+  final Book book;
+  const BookRecommendationCard({required this.book, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 2.0,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Tap on: ${book.title}'))); },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 5,
+              child: Image.network(
+                book.imageUrl,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Center(child: Icon(Icons.broken_image, size: 30, color: Colors.grey)),
+                loadingBuilder: (context, child, loadingProgress) => loadingProgress == null ? child : Center(child: CircularProgressIndicator(strokeWidth: 2.0, value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,)),
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(book.title, style: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold), maxLines: 2, overflow: TextOverflow.ellipsis),
+                    const SizedBox(height: 2),
+                    Text(book.author, style: textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    const Spacer(),
+                    Text('Rp ${book.price.toStringAsFixed(0)}', style: textTheme.bodyMedium?.copyWith(color: colorScheme.primary, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
