@@ -73,7 +73,7 @@ class _CartState extends State<Cart> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Keranjang'),
+        title: const Text('Shopping Cart'),
         actions: [
           if (cartItems.isNotEmpty)
             IconButton(
