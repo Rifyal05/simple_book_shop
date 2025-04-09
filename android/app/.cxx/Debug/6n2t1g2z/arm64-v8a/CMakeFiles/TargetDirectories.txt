@@ -1,0 +1,2 @@
+/home/rifyalaidil/FLUTTER DATA/FLUTTER/FLUTTER PROJECT/simple_ecommerce/android/app/.cxx/Debug/6n2t1g2z/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/rifyalaidil/FLUTTER DATA/FLUTTER/FLUTTER PROJECT/simple_ecommerce/android/app/.cxx/Debug/6n2t1g2z/arm64-v8a/CMakeFiles/rebuild_cache.dir
