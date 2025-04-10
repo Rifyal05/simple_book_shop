@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_ecommerce/Navigaton/home_page.dart';
+import 'package:simple_ecommerce/Onboarding/onboarding_page.dart';
+
+import 'package:simple_ecommerce/colorcode/appcolor.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -9,6 +14,11 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool _showLogin = true;
+  bool _isLoading = false;
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+
+  final _formKey = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -25,6 +35,8 @@ class _AuthScreenState extends State<AuthScreen> {
   void _toggleForm() {
     setState(() {
       _showLogin = !_showLogin;
+      _isLoading = false;
+      _formKey.currentState?.reset();
       _emailController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
@@ -32,142 +44,206 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
-  Widget _buildForm() {
-    final formKey = ValueKey(_showLogin ? 'login' : 'register');
+  // IMPORTANT BLOCK!! COMMENT OUT LATER
 
-    return Container(
-      key: formKey,
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-      decoration: BoxDecoration(
-        color: Colors.black.withAlpha(51), // Diganti dari withOpacity(0.2)
-        borderRadius: BorderRadius.circular(16),
-      ),
-      margin: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Text(
-                _showLogin ? 'Selamat Datang!' : 'Buat Akun Baru',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+  // String? _validateEmail(String? value) {
+  //   if (value == null || value.trim().isEmpty) return 'Email tidak boleh kosong';
+  //   if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) return 'Format email tidak valid';
+  //   return null;
+  // }
+  //
+  // String? _validatePassword(String? value) {
+  //   if (value == null || value.isEmpty) return 'Password tidak boleh kosong';
+  //   if (value.length < 6) return 'Password minimal 6 karakter';
+  //   return null;
+  // }
+  //
+  // String? _validateConfirmPassword(String? value) {
+  //   if (!_showLogin) {
+  //     if (value == null || value.isEmpty) return 'Konfirmasi password tidak boleh kosong';
+  //     if (value != _passwordController.text) return 'Password tidak cocok';
+  //   }
+  //   return null;
+  // }
+
+
+  Future<void> _handleAuth() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() { _isLoading = true; });
+    FocusScope.of(context).unfocus();
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+
+    if (mounted) {
+      setState(() { _isLoading = false; });
+    }
+
+    Widget nextPage;
+    if (!hasSeenOnboarding) {
+      await prefs.setBool('hasSeenOnboarding', true);
+      nextPage = const OnboardingPage();
+    } else {
+      nextPage = const HomePage();
+    }
+
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => nextPage),
+      );
+    }
+  }
+
+  Widget _buildForm() {
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+        decoration: BoxDecoration(
+          color: AppColors.authFormBackground,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        margin: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  _showLogin ? 'Selamat Datang!' : 'Buat Akun Baru',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppColors.authPrimaryText,
                     shadows: [
-                      Shadow(blurRadius: 10.0, color: Colors.black.withAlpha(128)) // Diganti dari withOpacity(0.5)
-                    ]
+                      Shadow(blurRadius: 5.0, color: Colors.black.withAlpha(100))
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _showLogin ? 'Masuk untuk melanjutkan' : 'Daftar dengan data dirimu',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.authSecondaryText,
                 ),
                 textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _showLogin ? 'Masuk untuk melanjutkan' : 'Daftar dengan data dirimu',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.grey[300],
+              const SizedBox(height: 40),
+              _buildTextField(
+                controller: _emailController,
+                hintText: 'Email',
+                icon: Icons.email_outlined,
+                keyboardType: TextInputType.emailAddress,
+                // validator: _validateEmail, // IMPORTANT!!
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 40),
-
-            _buildTextField(
-              controller: _emailController,
-              hintText: 'Email',
-              icon: Icons.email_outlined,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-            _buildTextField(
-              controller: _passwordController,
-              hintText: 'Password',
-              icon: Icons.lock_outline,
-              obscureText: true,
-            ),
-
-            AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              child: AnimatedOpacity(
-                opacity: _showLogin ? 0.0 : 1.0,
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeIn,
-                child: !_showLogin
-                    ? Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: _buildTextField(
-                    controller: _confirmPasswordController,
-                    hintText: 'Konfirmasi Password',
-                    icon: Icons.lock_person_outlined,
-                    obscureText: true,
+              const SizedBox(height: 16),
+              _buildTextField(
+                controller: _passwordController,
+                hintText: 'Password',
+                icon: Icons.lock_outline,
+                obscureText: !_isPasswordVisible,
+                // validator: _validatePassword,  // IMPORTANT!!
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                    color: AppColors.authSecondaryText,
                   ),
-                )
-                    : const SizedBox.shrink(),
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                backgroundColor: Colors.tealAccent[700],
-                foregroundColor: Colors.black87,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  onPressed: () {
+                    setState(() { _isPasswordVisible = !_isPasswordVisible; });
+                  },
                 ),
-                elevation: 8,
               ),
-              onPressed: () {
-                if (_showLogin) { } else {
-                  if (_passwordController.text != _confirmPasswordController.text) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Password tidak cocok!'), backgroundColor: Colors.redAccent,)
-                    );
-                  }
-                }
-                FocusScope.of(context).unfocus();
-              },
-              child: Text(
-                _showLogin ? 'Login' : 'Register',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            TextButton(
-              onPressed: _toggleForm,
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey[300],
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text(
-                _showLogin
-                    ? 'Belum punya akun? Register di sini'
-                    : 'Sudah punya akun? Login di sini',
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            const Row(
-              children: [
-                Expanded(child: Divider(thickness: 1, color: Colors.white38)),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Text('ATAU', style: TextStyle(color: Colors.white60, fontWeight: FontWeight.w600)),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                child: AnimatedOpacity(
+                  opacity: _showLogin ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeIn,
+                  child: !_showLogin
+                      ? Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: _buildTextField(
+                      controller: _confirmPasswordController,
+                      hintText: 'Konfirmasi Password',
+                      icon: Icons.lock_person_outlined,
+                      obscureText: !_isConfirmPasswordVisible,
+                      // validator: _validateConfirmPassword, // IMPORTANT!!
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isConfirmPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                          color: AppColors.authSecondaryText,
+                        ),
+                        onPressed: () {
+                          setState(() { _isConfirmPasswordVisible = !_isConfirmPasswordVisible; });
+                        },
+                      ),
+                    ),
+                  )
+                      : const SizedBox.shrink(),
                 ),
-                Expanded(child: Divider(thickness: 1, color: Colors.white38)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Center(
-              child: Text(
-                'Login via SSO nanti di sini',
-                style: TextStyle(color: Colors.grey[600]),
               ),
-            ),
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 32),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: AppColors.authAccent,
+                  foregroundColor: AppColors.authButtonText,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 5,
+                ),
+                onPressed: _isLoading ? null : _handleAuth,
+                child: _isLoading
+                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.5, valueColor: AlwaysStoppedAnimation<Color>(Colors.black87)))
+                    : Text(
+                  _showLogin ? 'Login' : 'Register',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 24),
+              TextButton(
+                onPressed: _isLoading ? null : _toggleForm,
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.authSecondaryText,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                child: Text(
+                  _showLogin
+                      ? 'Belum punya akun? Register di sini'
+                      : 'Sudah punya akun? Login di sini',
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(child: Divider(thickness: 1, color: AppColors.authDivider)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Text('ATAU',
+                        style: TextStyle(
+                            color: AppColors.authSecondaryText, fontWeight: FontWeight.w600)),
+                  ),
+                  Expanded(child: Divider(thickness: 1, color: AppColors.authDivider)),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: _buildGoogleSignInImageButton(),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
@@ -179,42 +255,84 @@ class _AuthScreenState extends State<AuthScreen> {
     required IconData icon,
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+    Widget? suffixIcon,
   }) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      style: const TextStyle(color: Colors.white, fontSize: 16),
+      style: TextStyle(color: AppColors.authPrimaryText, fontSize: 16),
+      validator: validator,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[500]),
+        hintStyle: TextStyle(color: AppColors.authHintText),
         prefixIcon: Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 12.0),
-          child: Icon(icon, color: Colors.tealAccent[100], size: 22),
+          child: Icon(icon, color: AppColors.authPrefixIcon, size: 22),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+        suffixIcon: suffixIcon,
         filled: true,
-        fillColor: Colors.black.withAlpha(128), // Diganti dari withOpacity(0.5)
-        contentPadding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+        fillColor: AppColors.authTextFieldFill,
+        contentPadding:
+        const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.tealAccent[700]!, width: 2.5),
-        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withAlpha(51), width: 1), // Diganti dari withOpacity(0.2)
+          borderSide: BorderSide(color: AppColors.authBorder, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.authAccent, width: 2.0),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
+          borderSide: BorderSide(color: AppColors.authError, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 2),
+          borderSide: BorderSide(color: AppColors.authError, width: 2),
+        ),
+        errorStyle: TextStyle(color: AppColors.authError),
+      ),
+    );
+  }
+
+  Widget _buildGoogleSignInImageButton() {
+    const String googleLogoAssetPath = 'asset/Asset/UI/Images/googleicon.webp';
+
+    return Material(
+      color: AppColors.googleButtonBackground,
+      shape: const CircleBorder(),
+      elevation: 2.0,
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: _isLoading ? null : () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Fitur Login Google belum diimplementasikan')),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          child: SizedBox(
+            width: 28.0,
+            height: 28.0,
+            child: Image.asset(
+              googleLogoAssetPath,
+              errorBuilder: (context, error, stackTrace) {
+                // print("Error loading Google icon: $error");
+                return Icon(Icons.g_mobiledata, color: Colors.grey[600], size: 28.0);
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -223,42 +341,15 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TweenAnimationBuilder<double>(
-        tween: Tween<double>(end: _showLogin ? 0.0 : 1.0),
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeOutCubic,
-        builder: (context, lerpValue, child) {
-          final List<Color> loginColors = [
-            const Color(0xFF0D47A1),
-            const Color(0xFF00695C),
-            const Color(0xFF4A148C),
-            const Color(0xFF0D47A1),
-          ];
-          final List<Color> registerColors = [
-            const Color(0xFF880E4F),
-            const Color(0xFFB71C1C),
-            const Color(0xFF4A0072),
-            const Color(0xFF880E4F),
-          ];
-
-          List<Color> currentColors = [];
-          for (int i = 0; i < loginColors.length; i++) {
-            currentColors.add(Color.lerp(loginColors[i], registerColors[i], lerpValue)!);
-          }
-
-          final List<double> stops = [0.0, 0.33, 0.66, 1.0];
-
-          return Container(
-            decoration: BoxDecoration(
-              gradient: SweepGradient(
-                center: Alignment.center,
-                colors: currentColors,
-                stops: stops,
-              ),
-            ),
-            child: child,
-          );
-        },
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.authGradientStart, AppColors.authGradientEnd],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: const [0.1, 0.9],
+          ),
+        ),
         child: SafeArea(
           child: Center(
             child: AnimatedSwitcher(
@@ -267,11 +358,14 @@ class _AuthScreenState extends State<AuthScreen> {
                 final offsetAnimation = Tween<Offset>(
                   begin: Offset(_showLogin ? 1.0 : -1.0, 0.0),
                   end: Offset.zero,
-                ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic));
+                ).animate(CurvedAnimation(
+                    parent: animation, curve: Curves.easeInOutCubic));
                 final fadeAnimation = Tween<double>(
                   begin: 0.0,
                   end: 1.0,
-                ).animate(CurvedAnimation(parent: animation, curve: Curves.easeIn));
+                ).animate(CurvedAnimation(
+                    parent: animation, curve: Curves.easeIn));
+
                 return FadeTransition(
                   opacity: fadeAnimation,
                   child: SlideTransition(position: offsetAnimation, child: child),

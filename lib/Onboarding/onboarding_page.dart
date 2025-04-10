@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_ecommerce/Navigaton/home_page.dart';
+import 'package:simple_ecommerce/Authentication/auth_screen.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -17,7 +17,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     OnboardingData(
       title: "Selamat Datang di Toko Kami!",
       description:
-          "Temukan berbagai buku menarik dan berkualitas tinggi hanya di sini.",
+      "Temukan berbagai buku menarik dan berkualitas tinggi hanya di sini.",
       image: "asset/Asset/UI/Images/test-images.jpeg",
     ),
     OnboardingData(
@@ -41,6 +41,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Future<void> _onboarding() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasSeenOnboarding', true);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const AuthScreen()),
+    );
   }
 
   @override
@@ -101,30 +104,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget _buildBottomButtons() {
     if (_currentPage == _onboardingData.length - 1) {
       return ElevatedButton(
-        child: const Text("Mulai Belanja"),
-        onPressed: () {
-          _onboarding().then((_) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
-          });
-        },
+        onPressed: _onboarding,
+        child: const Text("Mulai"),
       );
     } else {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton(
+            onPressed: _onboarding,
             child: const Text("Lewati"),
-            onPressed: () {
-              _onboarding().then((_) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              });
-            },
           ),
           ElevatedButton(
             child: const Text("Selanjutnya"),
