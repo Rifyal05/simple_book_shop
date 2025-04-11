@@ -1,3 +1,4 @@
+// lib/UI/popularlistbook.dart
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -64,60 +65,74 @@ class PopularBookList extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 2, right: 4, top: 8, bottom: 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 120,
-                          width: double.infinity,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: CachedNetworkImage(
-                              imageUrl: book.imageUrl,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) =>
-                              const Center(child: CircularProgressIndicator()),
-                              errorWidget: (context, url, error) =>
-                              const Center(child: Icon(Icons.error)),
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 120,
+                        width: double.infinity,
+                        child: CachedNetworkImage(
+                          imageUrl: book.imageUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          errorWidget: (context, url, error) =>
+                          const Center(child: Icon(Icons.error)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 4.0, top: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              book.title,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
+                            Text(
+                              'oleh ${book.author}',
+                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              rupiahFormat.format(book.price),
+                              style: const TextStyle(fontSize: 14, color: Colors.green, fontWeight: FontWeight.w600), // Harga lebih jelas
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          book.title,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'oleh ${book.author}',
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          rupiahFormat.format(book.price),
-                          style: const TextStyle(fontSize: 14, color: Colors.green),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
+                      ),
+                      // const Spacer(),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0, bottom: 0, top: 20),
                           child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
                             onPressed: () {
-                              // print('Lihat Detail ${book.title}');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Lihat Detail ${book.title}')),
+                              );
                             },
                             child: const Text(
                               'Lihat Detail',
-                              style: TextStyle(color: Colors.blue),
+                              style: TextStyle(color: Colors.blue, fontSize: 12),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               );

@@ -1,3 +1,4 @@
+// lib/screens/dashboard.dart
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,6 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _current = 0;
-  // String _selectedOption = 'Terbaru';
   String _searchText = '';
   final ScrollController _scrollController = ScrollController();
 
@@ -94,7 +94,8 @@ class _DashboardState extends State<Dashboard> {
                             left: 10, bottom: 0, right: 10),
                         icon: const Icon(
                           Icons.settings_outlined,
-                          size: 30,
+                          // *** UBAH UKURAN ICON DI SINI ***
+                          size: 28, // Dari 30 menjadi 28 (atau sesuai selera)
                         ),
                         tooltip: 'Pengaturan',
                         onPressed: () {
@@ -129,7 +130,6 @@ class _DashboardState extends State<Dashboard> {
                                   horizontal: 12, vertical: 8),
                               textStyle: const TextStyle(fontSize: 14)),
                           onPressed: () {
-                            // print('Category selected: $category');
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                   content: Text('Kategori: $category')),
