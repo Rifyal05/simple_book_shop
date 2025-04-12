@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   AppColors._();
+
   static const Color authGradientStart = Color(0xFF2A0D4A);
   static const Color authGradientEnd = Color(0xFF0D2F4F);
   static final Color authFormBackground = Colors.black.withAlpha(80);
@@ -20,4 +21,15 @@ class AppColors {
 
   static const Color backgroundDark = Color(0xFF121212);
   static final Color indicatorInactive = Colors.grey.shade800;
+
+  static const Color drawerBackground = Color(0xFF1A1A2E);
+  static final Color drawerTextPrimary = Colors.grey.shade200;
+  static final Color drawerTextSecondary = Colors.grey.shade500;
+
+  static final Color drawerButtonActive = Colors.deepPurpleAccent.shade100;
+  static final Color drawerButtonInactive = Colors.deepPurple.shade900.withOpacity(0.6);
+  static final Color drawerButtonTextActive = Colors.white;
+  static final Color drawerButtonTextInactive = Colors.deepPurpleAccent.shade100.withOpacity(0.8);
+  static final Color drawerButtonOutline = Colors.deepPurpleAccent.shade100.withOpacity(0.5);
+
 }

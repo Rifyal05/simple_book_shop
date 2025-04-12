@@ -1,4 +1,3 @@
-// lib/screens/dashboard.dart
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +9,7 @@ import '../UI/book_list.dart';
 import '../UI/popularlistbook.dart';
 import '../DataTest/bannerimagedata.dart';
 import '../DataTest/bookdata.dart';
+import './categorypage.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -94,8 +94,7 @@ class _DashboardState extends State<Dashboard> {
                             left: 10, bottom: 0, right: 10),
                         icon: const Icon(
                           Icons.settings_outlined,
-                          // *** UBAH UKURAN ICON DI SINI ***
-                          size: 28, // Dari 30 menjadi 28 (atau sesuai selera)
+                          size: 28,
                         ),
                         tooltip: 'Pengaturan',
                         onPressed: () {
@@ -130,9 +129,13 @@ class _DashboardState extends State<Dashboard> {
                                   horizontal: 12, vertical: 8),
                               textStyle: const TextStyle(fontSize: 14)),
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text('Kategori: $category')),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CategoryPage(
+                                  categoryName: category,
+                                ),
+                              ),
                             );
                           },
                           child: Text(category),
@@ -174,7 +177,7 @@ class _DashboardState extends State<Dashboard> {
                         );
                       }).toList(),
                       options: CarouselOptions(
-                        height: 175.0,
+                        height: 170.0,
                         autoPlay: true,
                         enlargeCenterPage: true,
                         viewportFraction: 0.85,
