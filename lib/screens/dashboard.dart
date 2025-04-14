@@ -59,53 +59,58 @@ class _DashboardState extends State<Dashboard> {
               snap: false,
               forceElevated: innerBoxIsScrolled,
               bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16.0, right: 0, bottom: 0.0, top: 8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Cari buku...',
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                              borderSide: BorderSide.none,
+                preferredSize: const Size.fromHeight(kToolbarHeight * 1.3),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                          16.0, 8.0, 0.0, 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Cari buku...',
+                                prefixIcon: const Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                filled: true,
+                                fillColor:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 16),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _searchText = value;
+                                });
+                              },
                             ),
-                            filled: true,
-                            fillColor:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.grey[800]
-                                : Colors.grey[200],
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 16),
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              _searchText = value;
-                            });
-                          },
-                        ),
+                          IconButton(
+                            padding: const EdgeInsets.only(
+                                left: 10, bottom: 0, right: 10),
+                            icon: const Icon(
+                              Icons.settings_outlined,
+                              size: 28,
+                            ),
+                            tooltip: 'Pengaturan',
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Tombol Pengaturan Ditekan')),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        padding: const EdgeInsets.only(
-                            left: 10, bottom: 0, right: 10),
-                        icon: const Icon(
-                          Icons.settings_outlined,
-                          size: 28,
-                        ),
-                        tooltip: 'Pengaturan',
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Tombol Pengaturan Ditekan')),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 8.0),
+                  ],
                 ),
               ),
             ),
@@ -151,7 +156,8 @@ class _DashboardState extends State<Dashboard> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0, vertical: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -191,8 +197,7 @@ class _DashboardState extends State<Dashboard> {
                     const SizedBox(height: 8.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children:
-                      bannerImages.asMap().entries.map((entry) {
+                      children: bannerImages.asMap().entries.map((entry) {
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           width: _current == entry.key ? 12.0 : 8.0,
@@ -275,6 +280,34 @@ class _DashboardState extends State<Dashboard> {
             ),
             const SizedBox(height: 16.0),
             ArticleList(articles: articleList),
+            const SizedBox(height: 8.0),
+            GestureDetector(
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Menuju halaman artikel lengkap')),
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Lihat Berita Lainnya',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: Colors.blue,
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 24.0),
           ],
         ),

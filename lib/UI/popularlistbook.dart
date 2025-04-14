@@ -30,7 +30,7 @@ class PopularBookList extends StatelessWidget {
             );
           },
           child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -50,6 +50,7 @@ class PopularBookList extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(height: 10,),
         SizedBox(
           height: 250,
           child: ListView.builder(
@@ -104,7 +105,7 @@ class PopularBookList extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               rupiahFormat.format(book.price),
-                              style: const TextStyle(fontSize: 14, color: Colors.green, fontWeight: FontWeight.w600), // Harga lebih jelas
+                              style: const TextStyle(fontSize: 14, color: Colors.green, fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
