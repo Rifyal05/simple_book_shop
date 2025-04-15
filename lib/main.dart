@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Onboarding/onboarding_page.dart';
-import 'package:simple_ecommerce/Authentication/auth_screen.dart'; // Import AuthScreen
+import 'package:simple_ecommerce/Authentication/auth_screen.dart';
 import 'package:simple_ecommerce/Providers/cart_providers.dart';
 import 'package:simple_ecommerce/Providers/user_providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false; // Change to false
+  bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? true; // Change to true(if line 41 uncommented)
 
   runApp(
     MultiProvider(
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       home: hasSeenOnboarding ? const OnboardingPage() : const AuthScreen(), // Comment out this line after uncommenting the line above
       // Then, change the value in line 13 to `false`.
       // If line 42 is uncommented (do this if you want to modify the onboarding page),
-      // then the value in line 13 should be `true/false(better false)`.
+      // then the value in line 13 should be `true/false(better true)'.
       // If you have already run the code and saw the onboarding page
       // when the application launched, and subsequently modified the code
       // (by uncommenting line 41 and commenting out line 42),
