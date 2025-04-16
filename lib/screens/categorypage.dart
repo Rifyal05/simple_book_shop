@@ -14,10 +14,9 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   List<Book> _books = [];
-  final String _selectedFilter = 'Terbaru';
-  final RangeValues _currentPriceRange = const RangeValues(0, 200000);
+  String _selectedFilter = 'Terbaru';
+  RangeValues _currentPriceRange = const RangeValues(0, 200000);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _searchText = '';
 
   @override
   void initState() {
@@ -43,15 +42,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
     filteredBooks = filteredBooks.where((book) =>
     book.price >= _currentPriceRange.start &&
-        book.price <= _currentPriceRange.end)
-        .toList();
-
-    if (_searchText.isNotEmpty) {
-      filteredBooks = filteredBooks.where((book) =>
-      book.title.toLowerCase().contains(_searchText.toLowerCase()) ||
-          book.author.toLowerCase().contains(_searchText.toLowerCase()))
-          .toList();
-    }
+        book.price <= _currentPriceRange.end).toList();
 
     switch (filter) {
       case 'Terbaru':
@@ -135,48 +126,6 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Cari buku / author di ${widget.categoryName}...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24.0),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _searchText = value;
-                  });
-                },
-              ),
-            ),
-            Expanded(
-              child: filteredBooks.isEmpty
-                  ? Center(
-                child: Text(
-                  'Belum ada produk untuk kategori "${widget.categoryName}"',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                  textAlign: TextAlign.center,
-                ),
-              )
-                  : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: BookList(
-                    books: filteredBooks,
-                    searchText: _searchText,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
         endDrawer: Drawer(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           child: ListView(
@@ -193,7 +142,151 @@ class _CategoryPageState extends State<CategoryPage> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Filter Harga',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    RangeSlider(
+                      values: _currentPriceRange,
+                      min: 0,
+                      max: 200000,
+                      divisions: 10,
+                      labels: RangeLabels(
+                        'Rp ${_currentPriceRange.start.toStringAsFixed(0)}',
+                        'Rp ${_currentPriceRange.end.toStringAsFixed(0)}',
+                      ),
+                      onChanged: (RangeValues values) {
+                        setState(() {
+                          _currentPriceRange = values;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(color: Colors.grey),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Filter Lainnya',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      alignment: WrapAlignment.start,
+                      children: filters
+                          .map(
+                            (filter) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4.0, vertical: 2.0),
+                          child: _buildBubbleButton(
+                            label: filter,
+                            isSelected: _selectedFilter == filter,
+                            onPressed: () {
+                              setState(() {
+                                _selectedFilter = filter;
+                              });
+                            },
+                            context: context,
+                          ),
+                        ),
+                      )
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(color: Colors.grey),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _buildBubbleButton(
+                  onPressed: _onApplyFilterPressed,
+                  label: 'Apply Filter',
+                  context: context,
+                ),
+              ),
+              const Divider(color: Colors.grey),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Kategori',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      alignment: WrapAlignment.start,
+                      children: categories
+                          .map(
+                            (category) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4.0, vertical: 2.0),
+                          child: _buildBubbleButton(
+                            label: category,
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CategoryPage(categoryName: category),
+                                ),
+                              );
+                            },
+                            context: context,
+                          ),
+                        ),
+                      )
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
             ],
+          ),
+        ),
+        body: filteredBooks.isEmpty
+            ? Center(
+          child: Text(
+            'Belum ada produk untuk kategori "${widget.categoryName}"',
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            textAlign: TextAlign.center,
+          ),
+        )
+            : SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: BookList(
+              books: filteredBooks,
+              searchText: '',
+            ),
           ),
         ),
       ),
