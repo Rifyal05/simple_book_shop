@@ -2,11 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:simple_ecommerce/screens/searchpage.dart';
 import '../DataTest/articledata.dart';
 import '../Providers/cart_providers.dart';
-import '../UI/articlelist.dart';
-import '../UI/book_list.dart';
-import '../UI/popularlistbook.dart';
+import '../UI4BUILD/articlelist.dart';
+import '../UI4BUILD/book_list.dart';
+import '../UI4BUILD/popularlistbook.dart';
 import '../DataTest/bannerimagedata.dart';
 import '../DataTest/bookdata.dart';
 import './categorypage.dart';
@@ -20,7 +21,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _current = 0;
-  String _searchText = '';
+  final String _searchText = '';
   final ScrollController _scrollController = ScrollController();
 
   final List<String> _categories = [
@@ -63,32 +64,43 @@ class _DashboardState extends State<Dashboard> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                          16.0, 8.0, 0.0, 8.0),
+                      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0.0, 8.0),
                       child: Row(
                         children: [
                           Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Cari buku...',
-                                prefixIcon: const Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(50.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.grey[800]
-                                    : Colors.grey[200],
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 16),
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  _searchText = value;
-                                });
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SearchPage(),
+                                  ),
+                                );
                               },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 16),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                      ? Colors.grey[800]
+                                      : Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.search,
+                                      color: Colors.grey[500],
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Cari buku...',
+                                      style: TextStyle(color: Colors.grey[500]),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                           IconButton(

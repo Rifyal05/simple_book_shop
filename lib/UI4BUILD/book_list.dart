@@ -10,7 +10,7 @@ class BookList extends StatelessWidget {
   final List<Book> books;
   final String searchText;
 
-  const BookList({Key? key, required this.books, this.searchText = ''}) : super(key: key);
+  const BookList({super.key, required this.books, this.searchText = ''});
 
   @override
   Widget build(BuildContext context) {
