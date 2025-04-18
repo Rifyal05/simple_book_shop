@@ -1,0 +1,1 @@
+/home/rifyalaidil/FLUTTER DATA/FLUTTER/FLUTTER PROJECT/simple_ecommerce/build/app/intermediates/cxx/RelWithDebInfo/3r4x47l3/obj/arm64-v8a
