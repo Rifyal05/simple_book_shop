@@ -1,8 +1,12 @@
+// lib/screens/dashboard.dart
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:simple_ecommerce/screens/searchpage.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../DataTest/articledata.dart';
 import '../Providers/cart_providers.dart';
 import '../UI4BUILD/articlelist.dart';
@@ -11,6 +15,7 @@ import '../UI4BUILD/popularlistbook.dart';
 import '../DataTest/bannerimagedata.dart';
 import '../DataTest/bookdata.dart';
 import './categorypage.dart';
+import '../Model/banner_model.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -33,6 +38,52 @@ class _DashboardState extends State<Dashboard> {
     'Sains',
     'Sejarah',
   ];
+
+  void _handleBannerTap(BannerModel banner) async {
+    final type = banner.targetType;
+    final value = banner.targetValue;
+
+    switch (type) {
+      case 'category':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CategoryPage(categoryName: value),
+          ),
+        );
+        break;
+      case 'product':
+        final bookExists = bookList.any((book) => book.id == value);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Navigasi ke Produk ID: $value ${bookExists ? '(Ditemukan)' : '(Tidak Ditemukan)'}')),
+        );
+        break;
+      case 'article':
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Navigasi ke Artikel: $value')),
+        );
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleDetailPage(articleId: value)));
+        break;
+      case 'url':
+        final url = Uri.parse(value);
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Tidak bisa membuka URL: $value')),
+          );
+        }
+        break;
+      case 'none':
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('HEHEHE.')),
+        );
+        break;
+    }
+  }
+
 
   @override
   void dispose() {
@@ -174,31 +225,51 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16.0),
-                    CarouselSlider(
-                      items: bannerImages.map((url) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(5.0),
-                          child: AspectRatio(
-                            aspectRatio: 5 / 2,
-                            child: FittedBox(
-                              fit: BoxFit.cover,
+                    CarouselSlider.builder( // Gunakan builder untuk akses index
+                      itemCount: bannerData.length, // Jumlah item dari data baru
+                      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
+                        final banner = bannerData[itemIndex]; // Ambil data banner saat ini
+                        return GestureDetector(
+                          onTap: () {
+                            _handleBannerTap(banner); // Panggil fungsi handle tap
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
                               child: CachedNetworkImage(
-                                imageUrl: url,
+                                imageUrl: banner.imageUrl, // Gunakan imageUrl dari model
                                 fit: BoxFit.cover,
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                const Center(child: Icon(Icons.error)),
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                      child: CircularProgressIndicator(strokeWidth: 2.0)),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.grey[200],
+                                  child: Center(
+                                      child: Icon(
+                                        Icons.broken_image_outlined,
+                                        color: Colors.grey[600],
+                                        size: 40,
+                                      )),
+                                ),
                               ),
                             ),
                           ),
                         );
-                      }).toList(),
+                      },
                       options: CarouselOptions(
-                        height: 170.0,
+                        height: 180.0,
                         autoPlay: true,
                         enlargeCenterPage: true,
                         viewportFraction: 0.85,
+                        aspectRatio: 16/9,
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        autoPlayInterval: const Duration(seconds: 4),
+                        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                        enlargeFactor: 0.3,
                         onPageChanged: (index, reason) {
                           setState(() {
                             _current = index;
@@ -209,7 +280,7 @@ class _DashboardState extends State<Dashboard> {
                     const SizedBox(height: 8.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: bannerImages.asMap().entries.map((entry) {
+                      children: bannerData.asMap().entries.map((entry) { // Gunakan bannerData untuk indicator
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           width: _current == entry.key ? 12.0 : 8.0,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_ecommerce/Authentication/auth_screen.dart';
-import 'package:simple_ecommerce/colorcode/appcolor.dart';
 
 import '../Providers/user_providers.dart';
 
