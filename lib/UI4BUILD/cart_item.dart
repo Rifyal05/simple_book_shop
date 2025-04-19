@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import '../Model/cart_item_model.dart';
 import '../Providers/cart_providers.dart';
 
-
 class CartItemWidget extends StatelessWidget {
   final CartItemModel cartItemModel;
 
@@ -34,7 +33,7 @@ class CartItemWidget extends StatelessWidget {
                 height: 80,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.broken_image, size: 60),
+                    const Icon(Icons.broken_image, size: 60),
               ),
             ),
             const SizedBox(width: 10),
@@ -44,25 +43,29 @@ class CartItemWidget extends StatelessWidget {
                 children: [
                   Text(
                     cartItemModel.book.title,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
                     rupiahFormat.format(cartItemModel.book.price),
-                    style: TextStyle(fontSize: 14, color: Colors.green.shade700),
+                    style:
+                        TextStyle(fontSize: 14, color: Colors.green.shade700),
                   ),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: 30, width: 30,
+                        height: 30,
+                        width: 30,
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           iconSize: 18,
-                          icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent),
+                          icon: const Icon(Icons.remove_circle_outline,
+                              color: Colors.redAccent),
                           onPressed: () {
                             cart.decreaseQuantity(cartItemModel.id);
                           },
@@ -72,15 +75,18 @@ class CartItemWidget extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
                           '${cartItemModel.quantity}',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(
-                        height: 30, width: 30,
+                        height: 30,
+                        width: 30,
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           iconSize: 18,
-                          icon: const Icon(Icons.add_circle_outline, color: Colors.green),
+                          icon: const Icon(Icons.add_circle_outline,
+                              color: Colors.green),
                           onPressed: () {
                             cart.increaseQuantity(cartItemModel.id);
                           },
@@ -99,21 +105,25 @@ class CartItemWidget extends StatelessWidget {
                   context: context,
                   builder: (ctx) => AlertDialog(
                     title: const Text('Hapus Item'),
-                    content: Text('Anda yakin ingin menghapus "${cartItemModel.book.title}" dari keranjang?'),
+                    content: Text(
+                        'Anda yakin ingin menghapus "${cartItemModel.book.title}" dari keranjang?'),
                     actions: <Widget>[
                       TextButton(
                         child: const Text('Batal'),
                         onPressed: () => Navigator.of(ctx).pop(),
                       ),
                       TextButton(
-                        child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+                        child: const Text('Hapus',
+                            style: TextStyle(color: Colors.red)),
                         onPressed: () {
                           Navigator.of(ctx).pop();
                           cart.removeItemById(cartItemModel.id);
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('"${cartItemModel.book.title}" dihapus'), duration: const Duration(seconds: 3),)
-                          );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text('"${cartItemModel.book.title}" dihapus'),
+                            duration: const Duration(seconds: 3),
+                          ));
                         },
                       ),
                     ],

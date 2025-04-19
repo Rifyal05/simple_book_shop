@@ -8,7 +8,8 @@ class CartProvider with ChangeNotifier {
   List<CartItemModel> get items => [..._items];
 
   double get totalPrice {
-    return _items.fold(0.0, (sum, item) => sum + (item.book.price * item.quantity));
+    return _items.fold(
+        0.0, (sum, item) => sum + (item.book.price * item.quantity));
   }
 
   int get itemCount {
@@ -29,10 +30,12 @@ class CartProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
   void removeItemById(String bookId) {
     _items.removeWhere((item) => item.id == bookId);
     notifyListeners();
   }
+
   void increaseQuantity(String bookId) {
     final index = _items.indexWhere((item) => item.id == bookId);
     if (index >= 0) {

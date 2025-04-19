@@ -27,9 +27,11 @@ class AppColors {
   static final Color drawerTextSecondary = Colors.grey.shade500;
 
   static final Color drawerButtonActive = Colors.deepPurpleAccent.shade100;
-  static final Color drawerButtonInactive = Colors.deepPurple.shade900.withOpacity(0.6);
+  static final Color drawerButtonInactive =
+      Colors.deepPurple.shade900.withOpacity(0.6);
   static final Color drawerButtonTextActive = Colors.white;
-  static final Color drawerButtonTextInactive = Colors.deepPurpleAccent.shade100.withOpacity(0.8);
-  static final Color drawerButtonOutline = Colors.deepPurpleAccent.shade100.withOpacity(0.5);
-
+  static final Color drawerButtonTextInactive =
+      Colors.deepPurpleAccent.shade100.withOpacity(0.8);
+  static final Color drawerButtonOutline =
+      Colors.deepPurpleAccent.shade100.withOpacity(0.5);
 }

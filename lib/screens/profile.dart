@@ -9,7 +9,8 @@ class Profile extends StatelessWidget {
 
   Future<void> _showChangeUsernameDialog(
       BuildContext context, UserProvider user) async {
-    TextEditingController controller = TextEditingController(text: user.username);
+    TextEditingController controller =
+        TextEditingController(text: user.username);
     final formKey = GlobalKey<FormState>();
 
     return showDialog(
@@ -78,12 +79,13 @@ class Profile extends StatelessWidget {
             },
           ),
           TextButton(
-            child: Text('Logout', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+            child: Text('Logout',
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
             onPressed: () {
               Navigator.of(ctx).pop();
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => const AuthScreen()),
-                    (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -103,7 +105,13 @@ class Profile extends StatelessWidget {
     return Consumer<UserProvider>(
       builder: (context, user, child) {
         String initials = user.username.isNotEmpty
-            ? user.username.trim().split(' ').map((l) => l[0]).take(2).join().toUpperCase()
+            ? user.username
+                .trim()
+                .split(' ')
+                .map((l) => l[0])
+                .take(2)
+                .join()
+                .toUpperCase()
             : "U";
 
         return Scaffold(
@@ -118,7 +126,8 @@ class Profile extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
                   child: Text(
                     initials,
                     style: TextStyle(
@@ -131,20 +140,27 @@ class Profile extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   user.username,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'user.email@example.com',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
                 Card(
                   elevation: 2.0,
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   clipBehavior: Clip.antiAlias,
                   child: Column(
                     children: [
@@ -165,7 +181,9 @@ class Profile extends StatelessWidget {
                         subtitle: 'Lihat pesanan Anda sebelumnya',
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Halaman Riwayat Pesanan belum ada')),
+                            const SnackBar(
+                                content:
+                                    Text('Halaman Riwayat Pesanan belum ada')),
                           );
                         },
                       ),
@@ -177,7 +195,8 @@ class Profile extends StatelessWidget {
                         subtitle: 'Notifikasi, privasi, tema',
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Halaman Pengaturan belum ada')),
+                            const SnackBar(
+                                content: Text('Halaman Pengaturan belum ada')),
                           );
                         },
                       ),
@@ -189,7 +208,8 @@ class Profile extends StatelessWidget {
                         subtitle: 'FAQ, hubungi kami',
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Halaman Bantuan belum ada')),
+                            const SnackBar(
+                                content: Text('Halaman Bantuan belum ada')),
                           );
                         },
                       ),
@@ -200,13 +220,16 @@ class Profile extends StatelessWidget {
                 Card(
                   elevation: 2.0,
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   clipBehavior: Clip.antiAlias,
                   child: ListTile(
-                    leading: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+                    leading: Icon(Icons.logout,
+                        color: Theme.of(context).colorScheme.error),
                     title: Text(
                       'Logout',
-                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                      style:
+                          TextStyle(color: Theme.of(context).colorScheme.error),
                     ),
                     onTap: () {
                       _showLogoutConfirmationDialog(context);
@@ -216,7 +239,10 @@ class Profile extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text(
                   'Versi Aplikasi 1.0.0',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: Colors.grey),
                 ),
               ],
             ),
@@ -236,7 +262,9 @@ class Profile extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-      subtitle: subtitle != null ? Text(subtitle, style: Theme.of(context).textTheme.bodySmall) : null,
+      subtitle: subtitle != null
+          ? Text(subtitle, style: Theme.of(context).textTheme.bodySmall)
+          : null,
       trailing: const Icon(Icons.chevron_right, color: Colors.grey),
       onTap: onTap,
     );

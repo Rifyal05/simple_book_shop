@@ -66,13 +66,14 @@ class _AuthScreenState extends State<AuthScreen> {
   //   return null;
   // }
 
-
   Future<void> _handleAuth() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    setState(() { _isLoading = true; });
+    setState(() {
+      _isLoading = true;
+    });
     FocusScope.of(context).unfocus();
 
     await Future.delayed(const Duration(seconds: 1));
@@ -81,7 +82,9 @@ class _AuthScreenState extends State<AuthScreen> {
     bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
 
     if (mounted) {
-      setState(() { _isLoading = false; });
+      setState(() {
+        _isLoading = false;
+      });
     }
 
     Widget nextPage;
@@ -122,7 +125,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     fontWeight: FontWeight.bold,
                     color: AppColors.authPrimaryText,
                     shadows: [
-                      Shadow(blurRadius: 5.0, color: Colors.black.withAlpha(100))
+                      Shadow(
+                          blurRadius: 5.0, color: Colors.black.withAlpha(100))
                     ],
                   ),
                   textAlign: TextAlign.center,
@@ -130,10 +134,12 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                _showLogin ? 'Masuk untuk melanjutkan' : 'Daftar dengan data dirimu',
+                _showLogin
+                    ? 'Masuk untuk melanjutkan'
+                    : 'Daftar dengan data dirimu',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.authSecondaryText,
-                ),
+                      color: AppColors.authSecondaryText,
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
@@ -153,11 +159,15 @@ class _AuthScreenState extends State<AuthScreen> {
                 // validator: _validatePassword,  // IMPORTANT!!
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                    _isPasswordVisible
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
                     color: AppColors.authSecondaryText,
                   ),
                   onPressed: () {
-                    setState(() { _isPasswordVisible = !_isPasswordVisible; });
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
                   },
                 ),
               ),
@@ -170,24 +180,29 @@ class _AuthScreenState extends State<AuthScreen> {
                   curve: Curves.easeIn,
                   child: !_showLogin
                       ? Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: _buildTextField(
-                      controller: _confirmPasswordController,
-                      hintText: 'Konfirmasi Password',
-                      icon: Icons.lock_person_outlined,
-                      obscureText: !_isConfirmPasswordVisible,
-                      // validator: _validateConfirmPassword, // IMPORTANT!!
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isConfirmPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                          color: AppColors.authSecondaryText,
-                        ),
-                        onPressed: () {
-                          setState(() { _isConfirmPasswordVisible = !_isConfirmPasswordVisible; });
-                        },
-                      ),
-                    ),
-                  )
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: _buildTextField(
+                            controller: _confirmPasswordController,
+                            hintText: 'Konfirmasi Password',
+                            icon: Icons.lock_person_outlined,
+                            obscureText: !_isConfirmPasswordVisible,
+                            // validator: _validateConfirmPassword, // IMPORTANT!!
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isConfirmPasswordVisible
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
+                                color: AppColors.authSecondaryText,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isConfirmPasswordVisible =
+                                      !_isConfirmPasswordVisible;
+                                });
+                              },
+                            ),
+                          ),
+                        )
                       : const SizedBox.shrink(),
                 ),
               ),
@@ -204,11 +219,18 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 onPressed: _isLoading ? null : _handleAuth,
                 child: _isLoading
-                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.5, valueColor: AlwaysStoppedAnimation<Color>(Colors.black87)))
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black87)))
                     : Text(
-                  _showLogin ? 'Login' : 'Register',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+                        _showLogin ? 'Login' : 'Register',
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
               ),
               const SizedBox(height: 24),
               TextButton(
@@ -227,14 +249,19 @@ class _AuthScreenState extends State<AuthScreen> {
               const SizedBox(height: 24),
               Row(
                 children: [
-                  Expanded(child: Divider(thickness: 1, color: AppColors.authDivider)),
+                  Expanded(
+                      child:
+                          Divider(thickness: 1, color: AppColors.authDivider)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Text('ATAU',
                         style: TextStyle(
-                            color: AppColors.authSecondaryText, fontWeight: FontWeight.w600)),
+                            color: AppColors.authSecondaryText,
+                            fontWeight: FontWeight.w600)),
                   ),
-                  Expanded(child: Divider(thickness: 1, color: AppColors.authDivider)),
+                  Expanded(
+                      child:
+                          Divider(thickness: 1, color: AppColors.authDivider)),
                 ],
               ),
               const SizedBox(height: 24),
@@ -272,12 +299,13 @@ class _AuthScreenState extends State<AuthScreen> {
           padding: const EdgeInsets.only(left: 16.0, right: 12.0),
           child: Icon(icon, color: AppColors.authPrefixIcon, size: 22),
         ),
-        prefixIconConstraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+        prefixIconConstraints:
+            const BoxConstraints(minWidth: 24, minHeight: 24),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: AppColors.authTextFieldFill,
         contentPadding:
-        const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -312,11 +340,15 @@ class _AuthScreenState extends State<AuthScreen> {
       elevation: 2.0,
       child: InkWell(
         customBorder: const CircleBorder(),
-        onTap: _isLoading ? null : () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Fitur Login Google belum diimplementasikan')),
-          );
-        },
+        onTap: _isLoading
+            ? null
+            : () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content:
+                          Text('Fitur Login Google belum diimplementasikan')),
+                );
+              },
         child: Container(
           padding: const EdgeInsets.all(8.0),
           decoration: const BoxDecoration(
@@ -329,7 +361,8 @@ class _AuthScreenState extends State<AuthScreen> {
               googleLogoAssetPath,
               errorBuilder: (context, error, stackTrace) {
                 // print("Error loading Google icon: $error");
-                return Icon(Icons.g_mobiledata, color: Colors.grey[600], size: 28.0);
+                return Icon(Icons.g_mobiledata,
+                    color: Colors.grey[600], size: 28.0);
               },
             ),
           ),
@@ -363,12 +396,13 @@ class _AuthScreenState extends State<AuthScreen> {
                 final fadeAnimation = Tween<double>(
                   begin: 0.0,
                   end: 1.0,
-                ).animate(CurvedAnimation(
-                    parent: animation, curve: Curves.easeIn));
+                ).animate(
+                    CurvedAnimation(parent: animation, curve: Curves.easeIn));
 
                 return FadeTransition(
                   opacity: fadeAnimation,
-                  child: SlideTransition(position: offsetAnimation, child: child),
+                  child:
+                      SlideTransition(position: offsetAnimation, child: child),
                 );
               },
               child: _buildForm(),

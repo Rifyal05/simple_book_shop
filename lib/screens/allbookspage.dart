@@ -68,9 +68,9 @@ class _AllBooksPageState extends State<AllBooksPage> {
                             ),
                             filled: true,
                             fillColor:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.grey[800]
-                                : Colors.grey[200],
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 16),
                           ),
@@ -113,26 +113,26 @@ class _AllBooksPageState extends State<AllBooksPage> {
                     child: Row(
                       children: _categories
                           .map((category) => Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              textStyle: const TextStyle(fontSize: 14)),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CategoryPage(
-                                  categoryName: category,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      textStyle: const TextStyle(fontSize: 14)),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CategoryPage(
+                                          categoryName: category,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(category),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Text(category),
-                        ),
-                      ))
+                              ))
                           .toList(),
                     ),
                   ),

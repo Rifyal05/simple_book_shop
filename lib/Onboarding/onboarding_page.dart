@@ -17,7 +17,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     OnboardingData(
       title: "Selamat Datang di Toko Kami!",
       description:
-      "Temukan berbagai buku menarik dan berkualitas tinggi hanya di sini.",
+          "Temukan berbagai buku menarik dan berkualitas tinggi hanya di sini.",
       image: "asset/Asset/UI/Images/test-images.jpeg",
     ),
     OnboardingData(

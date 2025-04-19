@@ -1,5 +1,3 @@
-// lib/screens/dashboard.dart
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +54,8 @@ class _DashboardState extends State<Dashboard> {
         final bookExists = bookList.any((book) => book.id == value);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Navigasi ke Produk ID: $value ${bookExists ? '(Ditemukan)' : '(Tidak Ditemukan)'}')),
+              content: Text(
+                  'Navigasi ke Produk ID: $value ${bookExists ? '(Ditemukan)' : '(Tidak Ditemukan)'}')),
         );
         break;
       case 'article':
@@ -83,7 +82,6 @@ class _DashboardState extends State<Dashboard> {
         break;
     }
   }
-
 
   @override
   void dispose() {
@@ -132,7 +130,8 @@ class _DashboardState extends State<Dashboard> {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 16),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).brightness == Brightness.dark
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? Colors.grey[800]
                                       : Colors.grey[200],
                                   borderRadius: BorderRadius.circular(50.0),
@@ -189,26 +188,26 @@ class _DashboardState extends State<Dashboard> {
                     child: Row(
                       children: _categories
                           .map((category) => Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              textStyle: const TextStyle(fontSize: 14)),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CategoryPage(
-                                  categoryName: category,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      textStyle: const TextStyle(fontSize: 14)),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CategoryPage(
+                                          categoryName: category,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(category),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Text(category),
-                        ),
-                      ))
+                              ))
                           .toList(),
                     ),
                   ),
@@ -225,13 +224,17 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16.0),
-                    CarouselSlider.builder( // Gunakan builder untuk akses index
-                      itemCount: bannerData.length, // Jumlah item dari data baru
-                      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
-                        final banner = bannerData[itemIndex]; // Ambil data banner saat ini
+                    CarouselSlider.builder(
+                      itemCount:
+                          bannerData.length,
+                      itemBuilder: (BuildContext context, int itemIndex,
+                          int pageViewIndex) {
+                        final banner =
+                            bannerData[itemIndex];
                         return GestureDetector(
                           onTap: () {
-                            _handleBannerTap(banner); // Panggil fungsi handle tap
+                            _handleBannerTap(
+                                banner);
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width,
@@ -239,21 +242,23 @@ class _DashboardState extends State<Dashboard> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: CachedNetworkImage(
-                                imageUrl: banner.imageUrl, // Gunakan imageUrl dari model
+                                imageUrl: banner
+                                    .imageUrl,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => Container(
                                   color: Colors.grey[300],
                                   child: const Center(
-                                      child: CircularProgressIndicator(strokeWidth: 2.0)),
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2.0)),
                                 ),
                                 errorWidget: (context, url, error) => Container(
                                   color: Colors.grey[200],
                                   child: Center(
                                       child: Icon(
-                                        Icons.broken_image_outlined,
-                                        color: Colors.grey[600],
-                                        size: 40,
-                                      )),
+                                    Icons.broken_image_outlined,
+                                    color: Colors.grey[600],
+                                    size: 40,
+                                  )),
                                 ),
                               ),
                             ),
@@ -265,10 +270,11 @@ class _DashboardState extends State<Dashboard> {
                         autoPlay: true,
                         enlargeCenterPage: true,
                         viewportFraction: 0.85,
-                        aspectRatio: 16/9,
+                        aspectRatio: 16 / 9,
                         autoPlayCurve: Curves.fastOutSlowIn,
                         autoPlayInterval: const Duration(seconds: 4),
-                        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 800),
                         enlargeFactor: 0.3,
                         onPageChanged: (index, reason) {
                           setState(() {
@@ -280,7 +286,7 @@ class _DashboardState extends State<Dashboard> {
                     const SizedBox(height: 8.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: bannerData.asMap().entries.map((entry) { // Gunakan bannerData untuk indicator
+                      children: bannerData.asMap().entries.map((entry) {
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           width: _current == entry.key ? 12.0 : 8.0,
@@ -290,8 +296,8 @@ class _DashboardState extends State<Dashboard> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.0),
                             color: (_current == entry.key
-                                ? Theme.of(context).colorScheme.primary
-                                : Colors.grey)
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Colors.grey)
                                 .withOpacity(_current == entry.key ? 0.9 : 0.4),
                           ),
                         );
@@ -367,7 +373,8 @@ class _DashboardState extends State<Dashboard> {
             GestureDetector(
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Menuju halaman artikel lengkap')),
+                  const SnackBar(
+                      content: Text('Menuju halaman artikel lengkap')),
                 );
               },
               child: const Padding(

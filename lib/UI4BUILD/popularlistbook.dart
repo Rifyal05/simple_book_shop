@@ -50,7 +50,9 @@ class PopularBookList extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         SizedBox(
           height: 250,
           child: ListView.builder(
@@ -76,14 +78,15 @@ class PopularBookList extends StatelessWidget {
                         child: CachedNetworkImage(
                           imageUrl: book.imageUrl,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                          placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator(strokeWidth: 2)),
                           errorWidget: (context, url, error) =>
-                          const Center(child: Icon(Icons.error)),
+                              const Center(child: Icon(Icons.error)),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0, right: 4.0, top: 8.0),
+                        padding: const EdgeInsets.only(
+                            left: 8.0, right: 4.0, top: 8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -98,14 +101,18 @@ class PopularBookList extends StatelessWidget {
                             ),
                             Text(
                               'oleh ${book.author}',
-                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.grey[600]),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 4),
                             Text(
                               rupiahFormat.format(book.price),
-                              style: const TextStyle(fontSize: 14, color: Colors.green, fontWeight: FontWeight.w600),
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -114,21 +121,26 @@ class PopularBookList extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 4.0, bottom: 0, top: 20),
+                          padding: const EdgeInsets.only(
+                              right: 4.0, bottom: 0, top: 20),
                           child: TextButton(
                             style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
                               minimumSize: Size.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Lihat Detail ${book.title}')),
+                                SnackBar(
+                                    content:
+                                        Text('Lihat Detail ${book.title}')),
                               );
                             },
                             child: const Text(
                               'Lihat Detail',
-                              style: TextStyle(color: Colors.blue, fontSize: 12),
+                              style:
+                                  TextStyle(color: Colors.blue, fontSize: 12),
                             ),
                           ),
                         ),

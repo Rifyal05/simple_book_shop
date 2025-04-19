@@ -84,8 +84,8 @@ class _SearchPageState extends State<SearchPage> {
       } else {
         _searchResults = bookList
             .where((book) =>
-        book.title.toLowerCase().contains(query) ||
-            book.author.toLowerCase().contains(query))
+                book.title.toLowerCase().contains(query) ||
+                book.author.toLowerCase().contains(query))
             .toList();
       }
     });
@@ -108,9 +108,9 @@ class _SearchPageState extends State<SearchPage> {
     if (_searchHistory.isEmpty) {
       return const Center(
           child: Text(
-            'Belum ada riwayat pencarian.',
-            style: TextStyle(color: Colors.grey),
-          ));
+        'Belum ada riwayat pencarian.',
+        style: TextStyle(color: Colors.grey),
+      ));
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,11 +120,13 @@ class _SearchPageState extends State<SearchPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Riwayat Pencarian', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text('Riwayat Pencarian',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               if (_searchHistory.isNotEmpty)
                 TextButton(
                   onPressed: _clearSearchHistory,
-                  child: const Text('Hapus Semua', style: TextStyle(color: Colors.redAccent)),
+                  child: const Text('Hapus Semua',
+                      style: TextStyle(color: Colors.redAccent)),
                 )
             ],
           ),
@@ -183,21 +185,26 @@ class _SearchPageState extends State<SearchPage> {
           child: TextField(
             controller: _searchController,
             autofocus: true,
-            textAlignVertical: TextAlignVertical.center, // Pusatkan teks vertikal
+            textAlignVertical:
+                TextAlignVertical.center, // Pusatkan teks vertikal
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search, color: Colors.grey[500], size: 20), // Icon search
+              prefixIcon: Icon(Icons.search,
+                  color: Colors.grey[500], size: 20), // Icon search
               suffixIcon: _query.isNotEmpty
-                  ? IconButton( // Tombol clear hanya muncul jika ada teks
-                icon: Icon(Icons.clear, color: Colors.grey[500], size: 20),
-                onPressed: () {
-                  _searchController.clear();
-                },
-              )
+                  ? IconButton(
+                      // Tombol clear hanya muncul jika ada teks
+                      icon:
+                          Icon(Icons.clear, color: Colors.grey[500], size: 20),
+                      onPressed: () {
+                        _searchController.clear();
+                      },
+                    )
                   : null,
               hintText: 'Cari judul atau penulis...',
               border: InputBorder.none, // Hilangkan border bawaan TextField
               hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16),
-              contentPadding: const EdgeInsets.only(top: 10, bottom: 10), // Atur padding internal
+              contentPadding: const EdgeInsets.only(
+                  top: 10, bottom: 10), // Atur padding internal
             ),
             style: const TextStyle(fontSize: 16), // Ukuran font input
             textInputAction: TextInputAction.search,

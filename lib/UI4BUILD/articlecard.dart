@@ -46,9 +46,9 @@ class ArticleCard extends StatelessWidget {
                       imageUrl: imageUrl,
                       fit: BoxFit.cover,
                       placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) =>
-                      const Center(child: Icon(Icons.error)),
+                          const Center(child: Icon(Icons.error)),
                     ),
                   ),
                 ),
