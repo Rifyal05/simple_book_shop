@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../Model/products.dart';
 import '../DataTest/bookdata.dart';
-import '../UI4BUILD/book_list.dart';
+import '../UI4DATA/category4data.dart';
 
 class CategoryPage extends StatefulWidget {
   final String categoryName;
@@ -71,19 +71,13 @@ class _CategoryPageState extends State<CategoryPage> {
     if (bookCount == 0) return [];
 
     if (category == 'Fiksi') {
-      return allBooks.take((bookCount * 0.3).ceil()).toList();
+      return allBooks.take( (bookCount * 0.3).ceil() ).toList();
     } else if (category == 'Sains') {
-      return allBooks
-          .skip((bookCount * 0.3).ceil())
-          .take((bookCount * 0.3).ceil())
-          .toList();
+      return allBooks.skip( (bookCount * 0.3).ceil() ).take( (bookCount * 0.3).ceil() ).toList();
     } else if (category == 'Anak-Anak') {
-      return allBooks
-          .skip((bookCount * 0.6).ceil())
-          .take((bookCount * 0.2).ceil())
-          .toList();
+      return allBooks.skip( (bookCount * 0.6).ceil() ).take( (bookCount * 0.2).ceil() ).toList();
     } else {
-      return allBooks.skip((bookCount * 0.8).ceil()).toList();
+      return allBooks.skip( (bookCount * 0.8).ceil() ).toList();
     }
   }
 
@@ -92,15 +86,15 @@ class _CategoryPageState extends State<CategoryPage> {
 
     filteredBooks = filteredBooks
         .where((book) =>
-            book.price >= _currentPriceRange.start &&
-            book.price <= _currentPriceRange.end)
+    book.price >= _currentPriceRange.start &&
+        book.price <= _currentPriceRange.end)
         .toList();
 
     if (_searchText.isNotEmpty) {
       filteredBooks = filteredBooks
           .where((book) =>
-              book.title.toLowerCase().contains(_searchText.toLowerCase()) ||
-              book.author.toLowerCase().contains(_searchText.toLowerCase()))
+      book.title.toLowerCase().contains(_searchText.toLowerCase()) ||
+          book.author.toLowerCase().contains(_searchText.toLowerCase()))
           .toList();
     }
 
@@ -118,12 +112,10 @@ class _CategoryPageState extends State<CategoryPage> {
       case 'Rating Tertinggi':
         break;
       case 'A-Z':
-        filteredBooks.sort(
-            (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+        filteredBooks.sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
         break;
       case 'Z-A':
-        filteredBooks.sort(
-            (a, b) => b.title.toLowerCase().compareTo(a.title.toLowerCase()));
+        filteredBooks.sort((a, b) => b.title.toLowerCase().compareTo(a.title.toLowerCase()));
         break;
     }
 
@@ -157,6 +149,7 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     final List<Book> filteredBooks = _applyFilter(_books);
@@ -169,18 +162,17 @@ class _CategoryPageState extends State<CategoryPage> {
         elevation: 1.0,
         leading: Navigator.canPop(context)
             ? IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        )
             : null,
         actions: [
           Builder(
             builder: (BuildContext iconButtonContext) {
               return IconButton(
-                // --- ICON SUDAH DIGANTI DI SINI ---
-                icon: const Icon(Icons.menu), // Menggunakan ikon burger (menu)
+                icon: const Icon(Icons.menu),
                 tooltip: 'Filter & Kategori',
                 onPressed: () {
                   setState(() {
@@ -208,8 +200,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainerHighest,
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               ),
               onChanged: (value) {
                 setState(() {
@@ -221,23 +212,16 @@ class _CategoryPageState extends State<CategoryPage> {
           Expanded(
             child: filteredBooks.isEmpty
                 ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text(
-                        'Tidak ada produk ditemukan untuk filter atau pencarian ini di kategori "${widget.categoryName}". Coba sesuaikan filter atau kata kunci.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                : ListView(
-                    padding:
-                        const EdgeInsets.only(bottom: 16, left: 8, right: 8),
-                    children: [
-                        BookList(
-                          books: filteredBooks,
-                        )
-                      ]),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                  'Tidak ada produk ditemukan untuk filter atau pencarian ini di kategori "${widget.categoryName}". Coba sesuaikan filter atau kata kunci.',
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+                : Category4Data(books: filteredBooks),
           ),
         ],
       ),
@@ -251,14 +235,11 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: <Widget>[
                     Text(
                       'Filter & Kategori',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
-                    Text('Urutkan Berdasarkan',
-                        style: Theme.of(context).textTheme.titleMedium),
+
+                    Text('Urutkan Berdasarkan', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8.0,
@@ -276,16 +257,15 @@ class _CategoryPageState extends State<CategoryPage> {
                           },
                           selectedColor: colorScheme.primaryContainer,
                           labelStyle: TextStyle(
-                              color: _tempSelectedFilter == filter
-                                  ? colorScheme.onPrimaryContainer
-                                  : null),
+                              color: _tempSelectedFilter == filter ? colorScheme.onPrimaryContainer : null
+                          ),
                           showCheckmark: false,
                         );
                       }).toList(),
                     ),
                     const Divider(height: 32),
-                    Text('Rentang Harga',
-                        style: Theme.of(context).textTheme.titleMedium),
+
+                    Text('Rentang Harga', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
                     RangeSlider(
                       values: _tempPriceRange,
@@ -307,15 +287,13 @@ class _CategoryPageState extends State<CategoryPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(_rupiahFormat.format(_tempPriceRange.start),
-                            style: Theme.of(context).textTheme.bodySmall),
-                        Text(_rupiahFormat.format(_tempPriceRange.end),
-                            style: Theme.of(context).textTheme.bodySmall),
+                        Text(_rupiahFormat.format(_tempPriceRange.start), style: Theme.of(context).textTheme.bodySmall),
+                        Text(_rupiahFormat.format(_tempPriceRange.end), style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),
                     const Divider(height: 32),
-                    Text('Pindah Kategori',
-                        style: Theme.of(context).textTheme.titleMedium),
+
+                    Text('Pindah Kategori', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8.0,
@@ -325,21 +303,17 @@ class _CategoryPageState extends State<CategoryPage> {
                             avatar: Icon(
                               Icons.label_outline,
                               size: 16,
-                              color: widget.categoryName == category
-                                  ? colorScheme.primary
-                                  : null,
+                              color: widget.categoryName == category ? colorScheme.primary : null,
                             ),
                             label: Text(category),
                             onPressed: () {
                               _navigateToCategory(category);
                             },
-                            backgroundColor: widget.categoryName == category
-                                ? colorScheme.surfaceContainerHighest
-                                : null,
+                            backgroundColor: widget.categoryName == category ? colorScheme.surfaceContainerHighest : null,
                             side: BorderSide(
-                                color: widget.categoryName == category
-                                    ? colorScheme.outlineVariant
-                                    : Colors.transparent));
+                                color: widget.categoryName == category ? colorScheme.outlineVariant : Colors.transparent
+                            )
+                        );
                       }).toList(),
                     ),
                     const SizedBox(height: 24),

@@ -43,6 +43,6 @@ app.*.map.json
 /android/app/release
 
 # Other
-#*.cxx
-#android/app/.cxx/
-#android/app/**/configure_fingerprint.bin
+*.cxx
+android/app/.cxx/
+android/app/**/configure_fingerprint.bin
