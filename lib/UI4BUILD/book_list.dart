@@ -39,8 +39,7 @@ class BookList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final book = filteredBooks[index];
                   return Card(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 4.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
@@ -60,12 +59,9 @@ class BookList extends StatelessWidget {
                                 imageUrl: book.imageUrl,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2.0)),
-                                errorWidget: (context, url, error) =>
-                                    const Center(
-                                        child: Icon(Icons.book_outlined,
-                                            color: Colors.grey, size: 40)),
+                                    child: CircularProgressIndicator(strokeWidth: 2.0)),
+                                errorWidget: (context, url, error) => const Center(
+                                    child: Icon(Icons.book_outlined, color: Colors.grey, size: 40)),
                               ),
                             ),
                           ),
@@ -76,25 +72,23 @@ class BookList extends StatelessWidget {
                                 Text(
                                   book.title,
                                   style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                      fontSize: 16, fontWeight: FontWeight.bold),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   'oleh ${book.author}',
-                                  style: TextStyle(
-                                      fontSize: 13, color: Colors.grey[700]),
+                                  style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   rupiahFormat.format(book.price),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 15,
-                                      color: Colors.green,
+                                      color: Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.w600),
                                 ),
                               ],
@@ -105,21 +99,15 @@ class BookList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               IconButton(
-                                icon: const Icon(
-                                    Icons.add_shopping_cart_outlined),
+                                icon: const Icon(Icons.add_shopping_cart_outlined),
                                 tooltip: 'Tambah ke keranjang',
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white70
-                                    : Theme.of(context).primaryColor,
+                                color: Theme.of(context).colorScheme.primary,
                                 onPressed: () {
                                   cart.addItem(book);
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content:
-                                          Text('"${book.title}" ditambahkan'),
+                                      content: Text('"${book.title}" ditambahkan'),
                                       duration: const Duration(seconds: 3),
                                       action: SnackBarAction(
                                         label: 'Undo',
@@ -127,8 +115,7 @@ class BookList extends StatelessWidget {
                                           cart.decreaseQuantity(book.id);
                                           ScaffoldMessenger.of(context)
                                               .hideCurrentSnackBar();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
                                                 content: Text(
                                                     'Penambahan "${book.title}" dibatalkan')),
@@ -144,8 +131,7 @@ class BookList extends StatelessWidget {
                                 onTap: () {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(
-                                          'Menampilkan detail untuk: ${book.title}'),
+                                      content: Text('Menampilkan detail untuk: ${book.title}'),
                                       duration: const Duration(seconds: 2),
                                     ),
                                   );
@@ -174,21 +160,20 @@ class BookList extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const AllBooksPage()),
+                    MaterialPageRoute(builder: (context) => const AllBooksPage()),
                   );
                 },
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'Lihat Produk Lainnya',
                       style: TextStyle(
                         color: Colors.blue,
                         fontSize: 16,
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.arrow_forward_ios,
                       size: 16,
                       color: Colors.blue,
@@ -210,8 +195,8 @@ class BookList extends StatelessWidget {
       String lowerSearchText = searchText.toLowerCase();
       return books
           .where((book) =>
-              book.title.toLowerCase().contains(lowerSearchText) ||
-              book.author.toLowerCase().contains(lowerSearchText))
+      book.title.toLowerCase().contains(lowerSearchText) ||
+          book.author.toLowerCase().contains(lowerSearchText))
           .toList();
     }
   }

@@ -1,8 +1,10 @@
+// lib/screens/allbookspage.dart (Lengkap, Tanpa Komentar, Import Diperbaiki)
+
 import 'package:flutter/material.dart';
 import '../Model/products.dart';
 import '../DataTest/bookdata.dart';
-import '../UI4BUILD/book_list.dart';
-import 'categorypage.dart';
+import '../UI4DATA/allproduct4data.dart';
+import 'categorypage.dart'; // <-- PASTIKAN IMPORT INI ADA DAN BENAR
 
 class AllBooksPage extends StatefulWidget {
   const AllBooksPage({super.key});
@@ -34,6 +36,11 @@ class _AllBooksPageState extends State<AllBooksPage> {
   @override
   Widget build(BuildContext context) {
     List<Book> allBooks = bookList;
+    final uniqueBooks = <String, Book>{};
+    for (var book in allBooks) {
+      uniqueBooks[book.id] = book;
+    }
+    allBooks = uniqueBooks.values.toList();
 
     return Scaffold(
       body: NestedScrollView(
@@ -60,17 +67,17 @@ class _AllBooksPageState extends State<AllBooksPage> {
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                            hintText: 'Cari buku...',
-                            prefixIcon: const Icon(Icons.search),
+                            hintText: 'Cari semua buku...',
+                            prefixIcon: const Icon(Icons.search, size: 20),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(50.0),
                               borderSide: BorderSide.none,
                             ),
                             filled: true,
                             fillColor:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.grey[800]
-                                    : Colors.grey[200],
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[800]
+                                : Colors.grey[200],
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 16),
                           ),
@@ -85,14 +92,14 @@ class _AllBooksPageState extends State<AllBooksPage> {
                         padding: const EdgeInsets.only(
                             left: 10, bottom: 0, right: 10),
                         icon: const Icon(
-                          Icons.settings_outlined,
+                          Icons.filter_list,
                           size: 28,
                         ),
-                        tooltip: 'Pengaturan',
+                        tooltip: 'Filter Produk',
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('Tombol Pengaturan Ditekan')),
+                                content: Text('Tombol Filter AppBar Ditekan (Belum ada aksi)')),
                           );
                         },
                       ),
@@ -113,26 +120,27 @@ class _AllBooksPageState extends State<AllBooksPage> {
                     child: Row(
                       children: _categories
                           .map((category) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 8),
-                                      textStyle: const TextStyle(fontSize: 14)),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CategoryPage(
-                                          categoryName: category,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(category),
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              textStyle: const TextStyle(fontSize: 14)),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                // Pastikan CategoryPage dikenali di sini
+                                builder: (context) => CategoryPage(
+                                  categoryName: category,
                                 ),
-                              ))
+                              ),
+                            );
+                          },
+                          child: Text(category),
+                        ),
+                      ))
                           .toList(),
                     ),
                   ),
@@ -144,8 +152,8 @@ class _AllBooksPageState extends State<AllBooksPage> {
           ];
         },
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: BookList(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: AllProduct4Data(
             books: allBooks,
             searchText: _searchText,
           ),

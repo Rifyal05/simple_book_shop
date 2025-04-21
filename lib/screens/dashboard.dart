@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:simple_ecommerce/screens/searchpage.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../DataTest/articledata.dart';
 import '../Providers/cart_providers.dart';
 import '../UI4BUILD/articlelist.dart';
@@ -54,15 +53,13 @@ class _DashboardState extends State<Dashboard> {
         final bookExists = bookList.any((book) => book.id == value);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  'Navigasi ke Produk ID: $value ${bookExists ? '(Ditemukan)' : '(Tidak Ditemukan)'}')),
+              content: Text('Navigasi ke Produk ID: $value ${bookExists ? '(Ditemukan)' : '(Tidak Ditemukan)'}')),
         );
         break;
       case 'article':
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Navigasi ke Artikel: $value')),
         );
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleDetailPage(articleId: value)));
         break;
       case 'url':
         final url = Uri.parse(value);
@@ -77,11 +74,12 @@ class _DashboardState extends State<Dashboard> {
       case 'none':
       default:
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('HEHEHE.')),
+          const SnackBar(content: Text('Banner ini tidak memiliki aksi.')),
         );
         break;
     }
   }
+
 
   @override
   void dispose() {
@@ -130,8 +128,7 @@ class _DashboardState extends State<Dashboard> {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 16),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
+                                  color: Theme.of(context).brightness == Brightness.dark
                                       ? Colors.grey[800]
                                       : Colors.grey[200],
                                   borderRadius: BorderRadius.circular(50.0),
@@ -188,26 +185,26 @@ class _DashboardState extends State<Dashboard> {
                     child: Row(
                       children: _categories
                           .map((category) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 8),
-                                      textStyle: const TextStyle(fontSize: 14)),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CategoryPage(
-                                          categoryName: category,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(category),
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              textStyle: const TextStyle(fontSize: 14)),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CategoryPage(
+                                  categoryName: category,
                                 ),
-                              ))
+                              ),
+                            );
+                          },
+                          child: Text(category),
+                        ),
+                      ))
                           .toList(),
                     ),
                   ),
@@ -225,16 +222,12 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     const SizedBox(height: 16.0),
                     CarouselSlider.builder(
-                      itemCount:
-                          bannerData.length,
-                      itemBuilder: (BuildContext context, int itemIndex,
-                          int pageViewIndex) {
-                        final banner =
-                            bannerData[itemIndex];
+                      itemCount: bannerData.length,
+                      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
+                        final banner = bannerData[itemIndex];
                         return GestureDetector(
                           onTap: () {
-                            _handleBannerTap(
-                                banner);
+                            _handleBannerTap(banner);
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width,
@@ -242,23 +235,21 @@ class _DashboardState extends State<Dashboard> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: CachedNetworkImage(
-                                imageUrl: banner
-                                    .imageUrl,
+                                imageUrl: banner.imageUrl,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => Container(
                                   color: Colors.grey[300],
                                   child: const Center(
-                                      child: CircularProgressIndicator(
-                                          strokeWidth: 2.0)),
+                                      child: CircularProgressIndicator(strokeWidth: 2.0)),
                                 ),
                                 errorWidget: (context, url, error) => Container(
                                   color: Colors.grey[200],
                                   child: Center(
                                       child: Icon(
-                                    Icons.broken_image_outlined,
-                                    color: Colors.grey[600],
-                                    size: 40,
-                                  )),
+                                        Icons.broken_image_outlined,
+                                        color: Colors.grey[600],
+                                        size: 40,
+                                      )),
                                 ),
                               ),
                             ),
@@ -266,15 +257,13 @@ class _DashboardState extends State<Dashboard> {
                         );
                       },
                       options: CarouselOptions(
-                        height: 180.0,
+                        height: MediaQuery.of(context).size.width / 2.2,
                         autoPlay: true,
                         enlargeCenterPage: true,
                         viewportFraction: 0.85,
-                        aspectRatio: 16 / 9,
                         autoPlayCurve: Curves.fastOutSlowIn,
                         autoPlayInterval: const Duration(seconds: 4),
-                        autoPlayAnimationDuration:
-                            const Duration(milliseconds: 800),
+                        autoPlayAnimationDuration: const Duration(milliseconds: 800),
                         enlargeFactor: 0.3,
                         onPageChanged: (index, reason) {
                           setState(() {
@@ -296,8 +285,8 @@ class _DashboardState extends State<Dashboard> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4.0),
                             color: (_current == entry.key
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Colors.grey)
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey)
                                 .withOpacity(_current == entry.key ? 0.9 : 0.4),
                           ),
                         );
@@ -373,8 +362,7 @@ class _DashboardState extends State<Dashboard> {
             GestureDetector(
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Menuju halaman artikel lengkap')),
+                  const SnackBar(content: Text('Menuju halaman artikel lengkap')),
                 );
               },
               child: const Padding(

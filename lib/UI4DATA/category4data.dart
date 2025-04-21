@@ -8,7 +8,7 @@ import '../Providers/cart_providers.dart';
 class Category4Data extends StatelessWidget {
   final List<Book> books;
 
-  const Category4Data({Key? key, required this.books}) : super(key: key);
+  const Category4Data({super.key, required this.books});
 
   @override
   Widget build(BuildContext context) {

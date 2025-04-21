@@ -4,13 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Onboarding/onboarding_page.dart';
 import 'package:simple_ecommerce/Authentication/auth_screen.dart';
 import 'package:simple_ecommerce/Providers/cart_providers.dart';
-import 'package:simple_ecommerce/Providers/user_providers.dart';
-
+import 'package:simple_ecommerce/Providers/user_providers.dart'; import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? true; // Change to true(if line 41 uncommented)
-
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp
+  ]);
   runApp(
     MultiProvider(
       providers: [
@@ -21,7 +22,6 @@ void main() async {
     ),
   );
 }
-
 class MyApp extends StatelessWidget {
   final bool hasSeenOnboarding;
 
