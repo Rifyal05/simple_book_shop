@@ -11,9 +11,7 @@ class AllProduct4Data extends StatelessWidget {
   final List<Book> books;
   final String searchText;
 
-  // --- PASTIKAN CONSTRUCTOR INI ADA ---
-  const AllProduct4Data({Key? key, required this.books, this.searchText = ''}) : super(key: key);
-  // ------------------------------------
+  const AllProduct4Data({super.key, required this.books, this.searchText = ''});
 
   @override
   Widget build(BuildContext context) {

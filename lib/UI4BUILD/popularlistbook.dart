@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../Model/products.dart';
 import '../Providers/cart_providers.dart';
-import 'package:provider/provider.dart';
+import '../screens/popularbookspage.dart';
 
 class PopularBookList extends StatelessWidget {
   final List<Book> books;
@@ -24,8 +25,9 @@ class PopularBookList extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Menuju halaman produk lengkap')),
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const PopularBooksPage()), // Ke PopularBooksPage
             );
           },
           child: const Padding(

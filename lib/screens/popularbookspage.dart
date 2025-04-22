@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import '../Model/products.dart';
 import '../DataTest/bookdata.dart';
-import '../UI4DATA/allproduct4data.dart';
+import '../UI4DATA/popularproduct4data.dart';
 import 'categorypage.dart';
 
-class AllBooksPage extends StatefulWidget {
-  const AllBooksPage({super.key});
+class PopularBooksPage extends StatefulWidget {
+  const PopularBooksPage({super.key});
 
   @override
-  State<AllBooksPage> createState() => _AllBooksPageState();
+  State<PopularBooksPage> createState() => _PopularBooksPageState();
 }
 
-class _AllBooksPageState extends State<AllBooksPage> {
+class _PopularBooksPageState extends State<PopularBooksPage> {
+  late List<Book> _popularBooks;
   String _searchText = '';
   final ScrollController _scrollController = ScrollController();
 
@@ -26,19 +27,25 @@ class _AllBooksPageState extends State<AllBooksPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    final uniqueBooks = <String, Book>{};
+    for (var book in bookList) {
+      uniqueBooks[book.id] = book;
+    }
+    _popularBooks = uniqueBooks.values.take(8).toList();
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    List<Book> allBooks = bookList;
-    final uniqueBooks = <String, Book>{};
-    for (var book in allBooks) {
-      uniqueBooks[book.id] = book;
-    }
-    allBooks = uniqueBooks.values.toList();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: NestedScrollView(
@@ -46,71 +53,55 @@ class _AllBooksPageState extends State<AllBooksPage> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              surfaceTintColor: Colors.black,
-              title: const Text(
-                "Semua Produk",
-                style: TextStyle(fontSize: 20),
-              ),
+              title: const Text("Produk Populer"),
               pinned: true,
               floating: true,
               snap: false,
               forceElevated: innerBoxIsScrolled,
+              elevation: 1.0,
+              surfaceTintColor: Colors.black,
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16.0, right: 0, bottom: 0.0, top: 8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Cari semua buku...',
-                            prefixIcon: const Icon(Icons.search, size: 20),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.grey[800]
-                                : Colors.grey[200],
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 16),
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              _searchText = value;
-                            });
-                          },
-                        ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Cari di produk populer...',
+                      prefixIcon: const Icon(Icons.search, size: 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide.none,
                       ),
-                      IconButton(
-                        padding: const EdgeInsets.only(
-                            left: 10, bottom: 0, right: 10),
-                        icon: const Icon(
-                          Icons.filter_list,
-                          size: 28,
-                        ),
-                        tooltip: 'Filter Produk',
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Tombol Filter AppBar Ditekan (Belum ada aksi)')),
-                          );
-                        },
-                      ),
-                    ],
+                      filled: true,
+                      fillColor: colorScheme.surfaceContainerHighest,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchText = value;
+                      });
+                    },
                   ),
                 ),
               ),
+              // Tombol aksi di AppBar
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.filter_list),
+                  tooltip: 'Filter & Urutkan',
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Fitur Filter/Urutkan belum diimplementasikan')),
+                    );
+                  },
+                ),
+              ],
             ),
             SliverPersistentHeader(
               delegate: _SliverAppBarDelegate(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                   color: Theme.of(context).scaffoldBackgroundColor,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -118,12 +109,10 @@ class _AllBooksPageState extends State<AllBooksPage> {
                     child: Row(
                       children: _categories
                           .map((category) => Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               textStyle: const TextStyle(fontSize: 14)),
                           onPressed: () {
                             Navigator.push(
@@ -150,8 +139,8 @@ class _AllBooksPageState extends State<AllBooksPage> {
         },
         body: Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: AllProduct4Data(
-            books: allBooks,
+          child: PopularBook4Data(
+            books: _popularBooks,
             searchText: _searchText,
           ),
         ),
