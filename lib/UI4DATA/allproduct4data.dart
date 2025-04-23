@@ -1,5 +1,3 @@
-// lib/UI4BUILD/allproduct4data.dart (Lengkap, Constructor Diperbaiki, Margin Atas 0)
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

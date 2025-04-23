@@ -13,6 +13,7 @@ import '../DataTest/bannerimagedata.dart';
 import '../DataTest/bookdata.dart';
 import './categorypage.dart';
 import '../Model/banner_model.dart';
+import 'allarticlepage.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -257,7 +258,7 @@ class _DashboardState extends State<Dashboard> {
                         );
                       },
                       options: CarouselOptions(
-                        height: MediaQuery.of(context).size.width / 2.2,
+                        height: MediaQuery.of(context).size.width / 2.5,
                         autoPlay: true,
                         enlargeCenterPage: true,
                         viewportFraction: 0.85,
@@ -361,8 +362,9 @@ class _DashboardState extends State<Dashboard> {
             const SizedBox(height: 8.0),
             GestureDetector(
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Menuju halaman artikel lengkap')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AllArticlesPage()),
                 );
               },
               child: const Padding(
